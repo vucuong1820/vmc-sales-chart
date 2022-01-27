@@ -1,5 +1,5 @@
 {
-  "name": "test-project",
+  "name": "minimog-sales-chart",
   "private": true,
   "scripts": {
     "dev": "next dev",

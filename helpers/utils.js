@@ -87,9 +87,8 @@ export const buildAlert = (data) => {
 };
 
 export const sendAlert = (payload) => {
-  const webhook =
-    "https://hooks.slack.com/services/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"; //Paste your webhook URL here
-
+  const webhook = 'https://hooks.slack.com/services/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'
+  console.log(webhook, 'webhook')
   try {
     axios.post(webhook, JSON.stringify(payload));
   } catch (e) {
