@@ -1,5 +1,6 @@
 import dbConnect from "../../../utils/dbConnect";
 import puppeteer from "puppeteer";
+import chromium from 'chrome-aws-lambda';
 import Customers from "../../../models/Customers";
 import format from "date-fns/format";
 import { themeShop } from "../../../constants/themeShop";
@@ -9,7 +10,12 @@ dbConnect();
 export default async function handler(req, res) {
   for (let i = 0; i < themeShop.length; i++) {
     const crawlData = async () => {
-      const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
+      // const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
+      const browser = await chromium.puppeteer.launch({
+        executablePath: await chromium.executablePath,
+        args: chromium.args,
+        headless: chromium.headless
+      });
       const page = await browser.newPage();
       await page.goto(themeShop[i].url);
       const presentSales = await page.evaluate(() => {

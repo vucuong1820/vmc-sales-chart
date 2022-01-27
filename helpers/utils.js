@@ -78,7 +78,7 @@ export const buildAlert = (data) => {
               emoji: true,
             },
             value: "click_me_123",
-            url: "https://minimog.vercel.app",
+            url: "https://chart.minimog.co/",
           },
         ],
       },
