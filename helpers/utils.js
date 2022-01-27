@@ -6,6 +6,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
+import {themeChart} from "../constants/themeChart"
 
 export const getDateChart = (date) => {
   let today = new Date();
@@ -39,8 +40,8 @@ export const getDateChart = (date) => {
 
 export const buildAlert = (data) => {
   let revenueBreakdown = data
-    .map(function (row) {
-      return row[0] + ": " + row[2];
+    .map(function (row, index) {
+      return `<${themeChart[index]?.url}|${row[0]}>: ${row[2]}`;
     })
     .join("\n");
   console.log(revenueBreakdown);
@@ -87,10 +88,11 @@ export const buildAlert = (data) => {
 };
 
 export const sendAlert = (payload) => {
+  console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, 'SLACK_WEBHOOK')
   const webhook = 'https://hooks.slack.com/services/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'
   console.log(webhook, 'webhook')
   try {
-    axios.post(webhook, JSON.stringify(payload));
+    axios.post(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, JSON.stringify(payload));
   } catch (e) {
     console.log(e);
   }
