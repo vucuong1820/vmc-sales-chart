@@ -16,6 +16,12 @@ const CustomersSchema = new mongoose.Schema({
   url: {
     type: String,
   },
+  review: {
+    type: Number,
+  },
+  sales: {
+    type: Number,
+  },
 });
 
 module.exports =
