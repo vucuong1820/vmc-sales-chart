@@ -9,7 +9,7 @@ dbConnect();
 export default async function handler(req, res) {
   for (let i = 0; i < themeShop.length; i++) {
     const crawlData = async () => {
-      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+      const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
       const page = await browser.newPage();
       await page.goto(themeShop[i].url);
       const presentSales = await page.evaluate(() => {
