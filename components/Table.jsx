@@ -1,9 +1,9 @@
-import { Button, Card, DataTable, Layout } from "@shopify/polaris";
+import { Card, DataTable, Layout } from "@shopify/polaris";
 import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { buildAlert, sendAlert } from "../helpers/utils";
-
+import { themeShop } from "../constants/themeShop";
 const Table = () => {
   const [rows, setRows] = useState([
     ["Minimog", 0, 0],
@@ -16,20 +16,22 @@ const Table = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const { data } = await axios.get("/api/crawl");
-        const result = [...rows];
-        result.forEach((item1) => {
-          data.forEach((item2) => {
-            if (item1[0] === item2.name) {
-              item1[1] = item2.review;
-              item1[2] += item2.sales;
-            }
+        themeShop.forEach(async (item) => {
+          const { data } = await axios.get(`/api/crawl?shop=${item.name}`);
+          const result = [...rows];
+          result.forEach((item1) => {
+            data.forEach((item2) => {
+              if (item1[0] === item2.name) {
+                item1[1] = item2.review;
+                item1[2] += item2.sales;
+              }
+            });
           });
+          result.sort((a, b) => {
+            return b[2] - a[2];
+          });
+          setRows(result);
         });
-        result.sort((a, b) => {
-          return b[2] - a[2];
-        });
-        setRows(result);
       } catch (error) {
         console.log(error);
       }

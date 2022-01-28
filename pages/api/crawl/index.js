@@ -7,83 +7,78 @@ import { getDateChart } from "../../../helpers/utils";
 dbConnect();
 
 export default async function handler(req, res) {
-  for (let i = 0; i < themeShop.length; i++) {
-    const crawlData = async () => {
-      // const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
-      const browser = await puppeteer.launch({
-        args: [],
-        executablePath:
-          process.platform === 'win32'
-            ? 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
-            : process.platform === 'linux'
-              ? '/usr/bin/google-chrome'
-              : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-      });
-      const page = await browser.newPage();
-      await page.goto(themeShop[i].url);
-      const presentSales = await page.evaluate(() => {
-        let titleLinks = document.querySelector(".item-header__sales-count");
-        return titleLinks.innerText;
-      });
-      const review = await page.evaluate(() => {
-        let review = document.querySelector(".is-visually-hidden");
-        return review.innerText;
-      });
-
-      await browser.close();
-      const getPreviousData = async () => {
-        const today = new Date();
-        const yesterday = new Date(today);
-
-        yesterday.setDate(yesterday.getDate() - 1);
-        const data = await Customers.find({
-          created_at: format(yesterday, "MM/dd/yyyy"),
-        });
-        return data;
-      };
-
-      const previousDate = await getPreviousData();
-      const filterData = previousDate.filter(
-        (item) => item.name === themeShop[i].name
-      );
-      if (previousDate.length === 0) {
-        await Customers.findOneAndUpdate(
-          {
-            created_at: format(yesterday, "MM/dd/yyyy"),
-            themeId: themeShop[i].themeId,
-            name: themeShop[i].name,
-          },
-          {
-            quantity:
-              Number(presentSales.replace(/\D/g, "")) - themeShop[i].fixedSales,
-            sales:
-              Number(presentSales.replace(/\D/g, "")) - themeShop[i].fixedSales,
-            review: Number(review.replace(/[^0-9\.]+/g, "")),
-          },
-          { upsert: true }
-        );
-      } else {
-        await Customers.findOneAndUpdate(
-          {
-            created_at: format(new Date(), "MM/dd/yyyy"),
-            themeId: themeShop[i].themeId,
-            name: themeShop[i].name,
-          },
-          {
-            quantity:
-              Number(presentSales.replace(/\D/g, "")) - themeShop[i].fixedSales,
-            sales:
-              Number(presentSales.replace(/\D/g, "")) -
-              themeShop[i].fixedSales -
-              filterData[0].quantity,
-            review: Number(review.replace(/[^0-9\.]+/g, "")),
-          },
-          { upsert: true }
-        );
-      }
+  const { shop } = req.query;
+  const crawlData = async () => {
+    const getFilterShop = () => {
+      return themeShop.filter((item) => item.name === shop);
     };
-    await crawlData();
-  }
+
+    const filterShop = getFilterShop();
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto(filterShop[0].url);
+    const presentSales = await page.evaluate(() => {
+      let titleLinks = document.querySelector(".item-header__sales-count");
+      return titleLinks.innerText;
+    });
+    const review = await page.evaluate(() => {
+      let review = document.querySelector(".is-visually-hidden");
+      return review.innerText;
+    });
+
+    await browser.close();
+    const getPreviousData = async () => {
+      const today = new Date();
+      const yesterday = new Date(today);
+
+      yesterday.setDate(yesterday.getDate() - 1);
+      const data = await Customers.find({
+        created_at: format(yesterday, "MM/dd/yyyy"),
+      });
+      return data;
+    };
+
+    const previousDate = await getPreviousData();
+    const filterData = previousDate.filter(
+      (item) => item.name === filterShop[0].name
+    );
+    if (previousDate.length === 0) {
+      await Customers.findOneAndUpdate(
+        {
+          created_at: format(yesterday, "MM/dd/yyyy"),
+          themeId: filterShop[0].themeId,
+          name: filterShop[0].name,
+        },
+        {
+          quantity:
+            Number(presentSales.replace(/\D/g, "")) - filterShop[0].fixedSales,
+          sales:
+            Number(presentSales.replace(/\D/g, "")) - filterShop[0].fixedSales,
+          review: Number(review.replace(/[^0-9\.]+/g, "")),
+        },
+        { upsert: true }
+      );
+    } else {
+      await Customers.findOneAndUpdate(
+        {
+          created_at: format(new Date(), "MM/dd/yyyy"),
+          themeId: filterShop[0].themeId,
+          name: filterShop[0].name,
+        },
+        {
+          quantity:
+            Number(presentSales.replace(/\D/g, "")) - filterShop[0].fixedSales,
+          sales:
+            Number(presentSales.replace(/\D/g, "")) -
+            filterShop[0].fixedSales -
+            filterData[0].quantity,
+          review: Number(review.replace(/[^0-9\.]+/g, "")),
+        },
+        { upsert: true }
+      );
+    }
+  };
+  await crawlData();
 
   const getData = async () => {
     let time = getDateChart("this_week");
@@ -94,7 +89,10 @@ export default async function handler(req, res) {
       },
     })
       .exec()
-      .then((data) => res.json(data));
+      .then((data) => {
+        const filterData = data.filter(item => item.name === shop)
+        res.json(filterData);
+      });
   };
   await getData();
 }

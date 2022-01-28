@@ -40,7 +40,6 @@ const ChartPreview = () => {
           <div style={{ marginBottom: "30px" }}>
             <Options setState={setState} />
           </div>
-
           <Line
             data={{
               datasets: inputData,
