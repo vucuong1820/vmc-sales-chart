@@ -66,7 +66,7 @@ const Options = ({ setState }) => {
         />
       </div>
       {selected === "custom_time" && (
-        <div style={{ marginTop: "15px"}}>
+        <div style={{ marginTop: "15px" }}>
           <DatePicker
             month={month}
             year={year}

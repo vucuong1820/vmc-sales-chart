@@ -1,4 +1,5 @@
 # example netlify.toml
+
 [build]
   command = "next build"
   functions = "netlify/functions"
@@ -19,5 +20,3 @@
   #  publish = "dist" # Folder with the static content for _redirect file
 
   ## more info on configuring this file: https://www.netlify.com/docs/netlify-toml-reference/
-[[plugins]]
-package = "@netlify/plugin-nextjs"

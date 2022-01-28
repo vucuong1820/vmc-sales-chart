@@ -6,7 +6,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-
+import {themeChart} from "../constants/themeChart"
 export const getDateChart = (date) => {
   let today = new Date();
   let dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
