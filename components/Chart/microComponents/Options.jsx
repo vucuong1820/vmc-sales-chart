@@ -57,14 +57,16 @@ const Options = ({ setState }) => {
   };
 
   return (
-    <div style={{ width: "25%" }}>
-      <Select
-        options={options}
-        value={selected}
-        onChange={(v) => setSelected(v)}
-      />
+    <div>
+      <div style={{ width: "15%" }}>
+        <Select
+          options={options}
+          value={selected}
+          onChange={(v) => setSelected(v)}
+        />
+      </div>
       {selected === "custom_time" && (
-        <div>
+        <div style={{ marginTop: "15px"}}>
           <DatePicker
             month={month}
             year={year}
@@ -80,7 +82,7 @@ const Options = ({ setState }) => {
               alignItems: "center",
             }}
           >
-            <Button onClick={handleClick}>Pick time</Button>
+            <Button onClick={handleClick}>Apply</Button>
           </div>
         </div>
       )}

@@ -40,7 +40,7 @@ export const getDateChart = (date) => {
 export const buildAlert = (data) => {
   let revenueBreakdown = data
     .map(function (row) {
-      return row[0] + ": " + row[2];
+      return `<${themeChart[index]?.url}|${row[0]}>: ${row[2]}`;
     })
     .join("\n");
   console.log(revenueBreakdown);
@@ -88,7 +88,7 @@ export const buildAlert = (data) => {
 
 export const sendAlert = (payload) => {
   const webhook =
-    "https://hooks.slack.com/services/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"; //Paste your webhook URL here
+    "https://hooks.slack.com/services/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"; //Paste your webhook URL here
 
   try {
     axios.post(webhook, JSON.stringify(payload));
