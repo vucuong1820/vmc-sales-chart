@@ -14,9 +14,11 @@ export default async function handler(req, res) {
     };
 
     const filterShop = getFilterShop();
+    const { fixedSales, name, themeId, url } = filterShop[0];
+
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-    await page.goto(filterShop[0].url);
+    await page.goto(url);
     const presentSales = await page.evaluate(() => {
       let titleLinks = document.querySelector(".item-header__sales-count");
       return titleLinks.innerText;
@@ -39,21 +41,17 @@ export default async function handler(req, res) {
     };
 
     const previousDate = await getPreviousData();
-    const filterData = previousDate.filter(
-      (item) => item.name === filterShop[0].name
-    );
+    const filterData = previousDate.filter((item) => item.name === name);
     if (previousDate.length === 0) {
       await Customers.findOneAndUpdate(
         {
           created_at: format(yesterday, "MM/dd/yyyy"),
-          themeId: filterShop[0].themeId,
-          name: filterShop[0].name,
+          themeId: themeId,
+          name: name,
         },
         {
-          quantity:
-            Number(presentSales.replace(/\D/g, "")) - filterShop[0].fixedSales,
-          sales:
-            Number(presentSales.replace(/\D/g, "")) - filterShop[0].fixedSales,
+          quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
+          sales: Number(presentSales.replace(/\D/g, "")) - fixedSales,
           review: Number(review.replace(/[^0-9\.]+/g, "")),
         },
         { upsert: true }
@@ -62,15 +60,14 @@ export default async function handler(req, res) {
       await Customers.findOneAndUpdate(
         {
           created_at: format(new Date(), "MM/dd/yyyy"),
-          themeId: filterShop[0].themeId,
-          name: filterShop[0].name,
+          themeId: themeId,
+          name: name,
         },
         {
-          quantity:
-            Number(presentSales.replace(/\D/g, "")) - filterShop[0].fixedSales,
+          quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
           sales:
             Number(presentSales.replace(/\D/g, "")) -
-            filterShop[0].fixedSales -
+            fixedSales -
             filterData[0].quantity,
           review: Number(review.replace(/[^0-9\.]+/g, "")),
         },
@@ -90,7 +87,7 @@ export default async function handler(req, res) {
     })
       .exec()
       .then((data) => {
-        const filterData = data.filter(item => item.name === shop)
+        const filterData = data.filter((item) => item.name === shop);
         res.json(filterData);
       });
   };

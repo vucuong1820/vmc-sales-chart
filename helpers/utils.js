@@ -6,30 +6,33 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import {themeChart} from "../constants/themeChart"
+import { themeChart } from "../constants/themeChart";
 export const getDateChart = (date) => {
   let today = new Date();
+
   let dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
-  const fixDate = (input) => {
-    input = new Date(input);
-    input.setDate(input.getDate() + 1);
-    return input;
-  };
+
   switch (date) {
     case "this_week":
       return {
-        start: format(fixDate(startOfWeek(today)), "MM/dd/yyyy"),
-        end: format(fixDate(endOfWeek(today)), "MM/dd/yyyy"),
+        start: format(startOfWeek(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
+        end: format(endOfWeek(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
       };
     case "last_week":
       return {
-        start: format(fixDate(startOfWeek(dayOfLastWeek)), "MM/dd/yyyy"),
-        end: format(fixDate(endOfWeek(dayOfLastWeek)), "MM/dd/yyyy"),
+        start: format(
+          startOfWeek(dayOfLastWeek, { weekStartsOn: 1 }),
+          "MM/dd/yyyy"
+        ),
+        end: format(
+          endOfWeek(dayOfLastWeek, { weekStartsOn: 1 }),
+          "MM/dd/yyyy"
+        ),
       };
     case "this_month":
       return {
-        start: format(startOfMonth(today), "MM/dd/yyyy"),
-        end: format(endOfMonth(today), "MM/dd/yyyy"),
+        start: format(startOfMonth(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
+        end: format(endOfMonth(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
       };
 
     default:
@@ -39,7 +42,7 @@ export const getDateChart = (date) => {
 
 export const buildAlert = (data) => {
   let revenueBreakdown = data
-    .map(function (row) {
+    .map(function (row, index) {
       return `<${themeChart[index]?.url}|${row[0]}>: ${row[2]}`;
     })
     .join("\n");
@@ -88,7 +91,7 @@ export const buildAlert = (data) => {
 
 export const sendAlert = (payload) => {
   const webhook =
-    "https://hooks.slack.com/services/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"; //Paste your webhook URL here
+    "https://hooks.slack.com/services/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";
 
   try {
     axios.post(webhook, JSON.stringify(payload));
