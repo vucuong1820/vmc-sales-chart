@@ -21,8 +21,6 @@
     "dotenv": "^14.3.2",
     "mongoose": "^6.1.7",
     "next": "12.0.8",
-    "nvm": "^0.0.4",
-    "nvm-win": "^0.2.4",
     "puppeteer": "^13.1.1",
     "react": "17.0.2",
     "react-chartjs-2": "^4.0.1",
