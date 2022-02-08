@@ -13,7 +13,7 @@
     "os": false
   },
   "dependencies": {
-    "@shopify/polaris": "^8.0.0",
+    "@shopify/polaris": "^7.0.0",
     "axios": "^0.25.0",
     "chart.js": "^3.7.0",
     "cheerio": "^1.0.0-rc.10",
@@ -21,6 +21,8 @@
     "dotenv": "^14.3.2",
     "mongoose": "^6.1.7",
     "next": "12.0.8",
+    "nvm": "^0.0.4",
+    "nvm-win": "^0.2.4",
     "puppeteer": "^13.1.1",
     "react": "17.0.2",
     "react-chartjs-2": "^4.0.1",
