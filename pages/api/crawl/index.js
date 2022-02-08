@@ -1,10 +1,10 @@
 import dbConnect from "../../../utils/dbConnect";
 import Customers from "../../../models/Customers";
 import format from "date-fns/format";
-import { themeShop } from "../../../constants/themeShop";
 import { getDateChart } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
 import axios from "axios";
+import { themeData } from "../../../constants/themeData";
 dbConnect();
 
 export default async function handler(req, res) {
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const crawlData = async () => {
     try {
       const getFilterShop = () => {
-        return themeShop.filter((item) => item.name === shop);
+        return themeData.filter((item) => item.name === shop);
       };
 
       const filterShop = getFilterShop();

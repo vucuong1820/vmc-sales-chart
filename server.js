@@ -6,23 +6,12 @@ const hostname = "localhost";
 const PORT = 3000;
 const app = next({ dev, hostname, PORT });
 const handle = app.getRequestHandler();
-const puppeteer = require("puppeteer");
+const schedule = require("node-schedule");
+const crawlData = require("./helpers/crawlData.js");
 
-// Crawl data automatically
-const automation = async () => {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
-  await page.goto("http://localhost:3000", {
-    waitUntil: "networkidle2",
-  });
-  await browser.close();
-};
-let now = new Date();
-let timer =
-  new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 0) -
-  now;
-
-setInterval(() => setTimeout(() => automation(), timer), 86400000);
+const job = schedule.scheduleJob("0 53 16 * * 0-6", async () => {
+  await crawlData();
+});
 
 app.prepare().then(() => {
   createServer(async (req, res) => {

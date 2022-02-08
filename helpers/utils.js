@@ -6,12 +6,12 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import { themeChart } from "../constants/themeChart";
+import { themeShop } from "../constants/themeShop";
 export const getDateChart = (date) => {
   let today = new Date();
 
   let dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
-  
+
   switch (date) {
     case "this_week":
       return {
@@ -43,7 +43,7 @@ export const getDateChart = (date) => {
 export const buildAlert = (data) => {
   let revenueBreakdown = data
     .map(function (row, index) {
-      return `<${themeChart[index]?.url}|${row[0]}>: ${row[2]}`;
+      return `<${themeShop[index]}|${row[0]}>: ${row[2]}`;
     })
     .join("\n");
   console.log(revenueBreakdown);

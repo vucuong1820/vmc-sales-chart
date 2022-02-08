@@ -3,7 +3,7 @@ import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { buildAlert, sendAlert } from "../helpers/utils";
-import { themeShop } from "../constants/themeShop";
+import themeShop from "../constants/themeShop";
 const Table = () => {
   const [rows, setRows] = useState([
     ["Minimog", 0, 0],
@@ -41,7 +41,8 @@ const Table = () => {
   }, []);
 
   const handleClick = () => {
-    sendAlert(buildAlert(rows));
+    console.log(buildAlert(rows));
+    // sendAlert(buildAlert(rows));
   };
   return (
     <Layout.Section fullWidth>
