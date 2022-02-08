@@ -35,5 +35,8 @@ yarn-error.log*
 next.config.js
 # Local Netlify folder
 .netlify
+<<<<<<< HEAD
 
 .vercel
+=======
+>>>>>>> 0bddae59b7a70cc5de0886163d410b788dd5da6c

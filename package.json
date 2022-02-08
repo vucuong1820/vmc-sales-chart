@@ -1,5 +1,5 @@
 {
-  "name": "test-project",
+  "name": "minimog-sales-chart",
   "private": true,
   "scripts": {
     "dev": "nodemon server.js",
@@ -13,7 +13,11 @@
     "os": false
   },
   "dependencies": {
+<<<<<<< HEAD
     "@shopify/polaris": "^7.0.0",
+=======
+    "@shopify/polaris": "^6.5.0",
+>>>>>>> 0bddae59b7a70cc5de0886163d410b788dd5da6c
     "axios": "^0.25.0",
     "chart.js": "^3.7.0",
     "cheerio": "^1.0.0-rc.10",
@@ -21,8 +25,12 @@
     "dotenv": "^14.3.2",
     "mongoose": "^6.1.7",
     "next": "12.0.8",
+<<<<<<< HEAD
     "node-schedule": "^2.1.0",
     "puppeteer": "^13.1.1",
+=======
+    "puppeteer": "^13.2.0",
+>>>>>>> 0bddae59b7a70cc5de0886163d410b788dd5da6c
     "react": "17.0.2",
     "react-chartjs-2": "^4.0.1",
     "react-dom": "17.0.2",

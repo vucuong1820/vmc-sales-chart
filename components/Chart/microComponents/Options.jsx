@@ -6,7 +6,7 @@ import { getDateChart } from "../../../helpers/utils";
 const Options = ({ setState }) => {
   const [selected, setSelected] = useState("this_week");
   const [{ month, year }, setDate] = useState({
-    month: getMonth(new Date(new Date().setMonth(new Date().getMonth()))),
+    month: getMonth(new Date()),
     year: getYear(new Date()),
   });
   const [selectedTimeRange, setSelectedTimeRange] = useState({
@@ -41,7 +41,7 @@ const Options = ({ setState }) => {
     { label: "This week", value: "this_week" },
     { label: "Last week", value: "last_week" },
     { label: "This month", value: "this_month" },
-    { label: "Select time", value: "custom_time" },
+    { label: "Custom time range", value: "custom_time" },
   ];
 
   const handleClick = async () => {
@@ -58,7 +58,7 @@ const Options = ({ setState }) => {
 
   return (
     <div>
-      <div style={{ width: "15%" }}>
+      <div style={{width: '200px'}}>
         <Select
           options={options}
           value={selected}
@@ -66,13 +66,14 @@ const Options = ({ setState }) => {
         />
       </div>
       {selected === "custom_time" && (
-        <div style={{ marginTop: "15px" }}>
+        <div style={{marginTop: 30}}>
           <DatePicker
             month={month}
             year={year}
             onChange={setSelectedTimeRange}
             onMonthChange={(month, year) => setDate({ month, year })}
             selected={selectedTimeRange}
+            disableDatesAfter={new Date()}
             allowRange
           />
           <div
