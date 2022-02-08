@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "nodemon server.js && next start",
     "lint": "next lint"
   },
   "browser": {
