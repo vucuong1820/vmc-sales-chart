@@ -19,10 +19,10 @@ const automation = async () => {
 };
 let now = new Date();
 let timer =
-  new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 5, 0, 0) -
+  new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 0) -
   now;
 
-setInterval(() => setTimeout(() => automation(), timer), 20000);
+setInterval(() => setTimeout(() => automation(), timer), 86400000);
 
 app.prepare().then(() => {
   createServer(async (req, res) => {
