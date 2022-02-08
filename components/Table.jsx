@@ -13,6 +13,7 @@ const Table = () => {
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
   ]);
+
   useEffect(() => {
     const getData = async () => {
       try {

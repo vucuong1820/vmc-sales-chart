@@ -11,7 +11,7 @@ export const getDateChart = (date) => {
   let today = new Date();
 
   let dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
-
+  
   switch (date) {
     case "this_week":
       return {
@@ -91,7 +91,7 @@ export const buildAlert = (data) => {
 
 export const sendAlert = (payload) => {
   const webhook =
-    "https://hooks.slack.com/services/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";
+    "https://hooks.slack.com/services/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";
 
   try {
     axios.post(webhook, JSON.stringify(payload));
