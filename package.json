@@ -21,7 +21,6 @@
     "dotenv": "^14.3.2",
     "mongoose": "^6.1.7",
     "next": "12.0.8",
-    "node-cron": "^3.0.0",
     "node-schedule": "^2.1.0",
     "react": "17.0.2",
     "react-chartjs-2": "^4.0.1",
