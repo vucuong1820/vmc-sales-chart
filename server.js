@@ -9,11 +9,9 @@ const handle = app.getRequestHandler();
 const schedule = require("node-schedule");
 const crawlData = require("./helpers/crawlData.js");
 require("dotenv").config();
-
-const job = schedule.scheduleJob("0 25 21 * * 0-6", async () => {
+const job = schedule.scheduleJob("0 35 8 * * 0-6", async () => {
   await crawlData();
 });
-
 app.prepare().then(() => {
   createServer(async (req, res) => {
     try {
