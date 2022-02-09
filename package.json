@@ -2,7 +2,7 @@
   "name": "minimog-sales-chart",
   "private": true,
   "scripts": {
-    "dev": "nodemon server.js && next start",
+    "dev": "nodemon server.js",
     "build": "next build",
     "start": "nodemon server.js && next start",
     "lint": "next lint"
