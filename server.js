@@ -10,7 +10,7 @@ const schedule = require("node-schedule");
 const crawlData = require("./helpers/crawlData.js");
 require("dotenv").config();
 console.log("======>", process.env.TIME);
-const job = schedule.scheduleJob("0 51 14 * * 0-6", async () => {
+const job = schedule.scheduleJob("0 54 14 * * 0-6", async () => {
   await crawlData();
 });
 //Ex: process.env.TIME=0 22 9 * * 0-6 ===> 9h22'0s am, Mon-Sun
