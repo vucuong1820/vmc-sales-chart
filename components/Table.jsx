@@ -42,7 +42,7 @@ const Table = () => {
 
   const handleClick = () => {
     console.log(buildAlert(rows));
-    // sendAlert(buildAlert(rows));
+    sendAlert(buildAlert(rows));
   };
   return (
     <Layout.Section fullWidth>
