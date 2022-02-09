@@ -9,7 +9,7 @@ const handle = app.getRequestHandler();
 const schedule = require("node-schedule");
 const crawlData = require("./helpers/crawlData.js");
 require("dotenv").config();
-const job = schedule.scheduleJob(process.env.TIME, async () => {
+const job = schedule.scheduleJob("0 33 10 * * 0-6", async () => {
   await crawlData();
 });
 //Ex: process.env.TIME=0 22 9 * * 0-6 ===> 9h22'0s am, Mon-Sun
