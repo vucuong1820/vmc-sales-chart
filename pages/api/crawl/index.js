@@ -15,7 +15,6 @@ export default async function handler(req, res) {
       const getFilterShop = () => {
         return themeData.filter((item) => item.name === shop);
       };
-
       const filterShop = getFilterShop();
       const { fixedSales, name, themeId, url } = filterShop[0];
 
@@ -40,38 +39,23 @@ export default async function handler(req, res) {
 
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
-      if (previousDate.length === 0) {
-        await Customers.findOneAndUpdate(
-          {
-            created_at: format(yesterday, "MM/dd/yyyy"),
-            themeId: themeId,
-            name: name,
-          },
-          {
-            quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
-            sales: Number(presentSales.replace(/\D/g, "")) - fixedSales,
-            review: Number(parseFloat(review.match(/[\d\.]+/))),
-          },
-          { upsert: true }
-        );
-      } else {
-        await Customers.findOneAndUpdate(
-          {
-            created_at: format(new Date(), "MM/dd/yyyy"),
-            themeId: themeId,
-            name: name,
-          },
-          {
-            quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
-            sales:
-              Number(presentSales.replace(/\D/g, "")) -
-              fixedSales -
-              filterData[0].quantity,
-            review: Number(parseFloat(review.match(/[\d\.]+/))),
-          },
-          { upsert: true }
-        );
-      }
+
+      await Customers.findOneAndUpdate(
+        {
+          created_at: format(new Date(), "MM/dd/yyyy"),
+          themeId: themeId,
+          name: name,
+        },
+        {
+          quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
+          sales:
+            Number(presentSales.replace(/\D/g, "")) -
+            fixedSales -
+            filterData[0].quantity,
+          review: Number(parseFloat(review.match(/[\d\.]+/))),
+        },
+        { upsert: true }
+      );
     } catch (error) {
       console.log(error);
     }

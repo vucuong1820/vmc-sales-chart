@@ -32,40 +32,39 @@ const crawlData = async () => {
       const filterData = previousDate.filter(
         (item) => item.name === theme.name
       );
-      if (previousDate.length === 0) {
-        await Customers.findOneAndUpdate(
-          {
-            created_at: format(yesterday, "MM/dd/yyyy"),
-            themeId: theme.themeId,
-            name: theme.name,
-          },
-          {
-            quantity:
-              Number(presentSales.replace(/\D/g, "")) - theme.fixedSales,
-            sales: Number(presentSales.replace(/\D/g, "")) - theme.fixedSales,
-            review: Number(parseFloat(review.match(/[\d\.]+/))),
-          },
-          { upsert: true }
-        );
-      } else {
-        await Customers.findOneAndUpdate(
-          {
-            created_at: format(new Date(), "MM/dd/yyyy"),
-            themeId: theme.themeId,
-            name: theme.name,
-          },
-          {
-            quantity:
-              Number(presentSales.replace(/\D/g, "")) - theme.fixedSales,
-            sales:
-              Number(presentSales.replace(/\D/g, "")) -
-              theme.fixedSales -
-              filterData[0].quantity,
-            review: Number(parseFloat(review.match(/[\d\.]+/))),
-          },
-          { upsert: true }
-        );
-      }
+      // if (previousDate.length === 0) {
+      //   await Customers.findOneAndUpdate(
+      //     {
+      //       created_at: format(yesterday, "MM/dd/yyyy"),
+      //       themeId: theme.themeId,
+      //       name: theme.name,
+      //     },
+      //     {
+      //       quantity:
+      //         Number(presentSales.replace(/\D/g, "")) - theme.fixedSales,
+      //       sales: Number(presentSales.replace(/\D/g, "")) - theme.fixedSales,
+      //       review: Number(parseFloat(review.match(/[\d\.]+/))),
+      //     },
+      //     { upsert: true }
+      //   );
+      // } else {
+      await Customers.findOneAndUpdate(
+        {
+          created_at: format(new Date(), "MM/dd/yyyy"),
+          themeId: theme.themeId,
+          name: theme.name,
+        },
+        {
+          quantity: Number(presentSales.replace(/\D/g, "")) - theme.fixedSales,
+          sales:
+            Number(presentSales.replace(/\D/g, "")) -
+            theme.fixedSales -
+            filterData[0].quantity,
+          review: Number(parseFloat(review.match(/[\d\.]+/))),
+        },
+        { upsert: true }
+      );
+      // }
     });
   } catch (error) {
     console.log(error);
