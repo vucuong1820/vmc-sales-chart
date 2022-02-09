@@ -73,7 +73,6 @@ const Options = ({ setState }) => {
             onChange={setSelectedTimeRange}
             onMonthChange={(month, year) => setDate({ month, year })}
             selected={selectedTimeRange}
-            disableDatesAfter={new Date()}
             allowRange
           />
           <div
