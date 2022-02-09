@@ -6,7 +6,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import { themeChart } from "../constants/themeChart";
+import themeShop from "../constants/themeShop";
 export const getDateChart = (date) => {
   let today = new Date();
 
@@ -42,11 +42,16 @@ export const getDateChart = (date) => {
 
 export const buildAlert = (data) => {
   let revenueBreakdown = data
-    .map(function (row, index) {
-      return `<${themeChart[index]?.url}|${row[0]}>: ${row[2]}`;
+    .map((row) => {
+      let result;
+      themeShop.forEach((theme) => {
+        if (theme.name === row[0]) {
+          result = `<${theme.url}|${row[0]}>: ${row[2]}`;
+        }
+      });
+      return result;
     })
     .join("\n");
-  console.log(revenueBreakdown);
   let payload = {
     blocks: [
       {
@@ -90,7 +95,7 @@ export const buildAlert = (data) => {
 };
 
 export const sendAlert = (payload) => {
-  console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, 'SLACK_WEBHOOK')
+  console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, "SLACK_WEBHOOK");
   try {
     axios.post(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, JSON.stringify(payload));
   } catch (e) {
