@@ -1,12 +1,12 @@
-name: Hourly cron job
+name: 15-minute-cron
 on:
   schedule:
-    - cron: '*/60 * * * *'
+    - cron: '*/1 * * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Hourly cron job
+      - name: Call our API route
         run: |
           curl --request GET \
-          --url 'https://test-project-6k0bstoal-henrytech4365-gmailcom.vercel.app/api/crawl' \
+          --url 'https://test-project-6b6eul81y-henrytech4365-gmailcom.vercel.app/api' \
