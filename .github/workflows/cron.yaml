@@ -9,4 +9,4 @@ jobs:
       - name: Call our API route
         run: |
           curl --request GET \
-          --url 'https://test-project-6b6eul81y-henrytech4365-gmailcom.vercel.app/api' \
+          --url 'https://chart.minimog.co/' \
