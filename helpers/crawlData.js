@@ -1,13 +1,12 @@
-const dbConnect = require("../utils/dbConnect");
-const Customers = require("../models/Customers");
-const format = require("date-fns/format");
-const themeShop = require("../constants/themeShop");
-const cheerio = require("cheerio");
-const axios = require("axios");
-const schedule = require("node-schedule");
+import dbConnect from "../utils/dbConnect";
+import Customers from "../models/Customers";
+import format from "date-fns/format";
+import cheerio from "cheerio";
+import axios from "axios";
+import themeShop from "../constants/themeShop";
 dbConnect();
 
-const crawlData = async () => {
+export const crawlData = async () => {
   try {
     themeShop.forEach(async (theme) => {
       let presentSales;
@@ -71,4 +70,3 @@ const crawlData = async () => {
   }
 };
 
-module.exports = crawlData;

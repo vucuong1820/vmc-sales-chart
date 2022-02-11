@@ -9,7 +9,6 @@ dbConnect();
 
 export default async function handler(req, res) {
   const { shop } = req.query;
-  console.log("===============================>Crawl");
   const crawlData = async () => {
     try {
       const getFilterShop = () => {
