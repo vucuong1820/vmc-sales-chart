@@ -1,7 +1,7 @@
 name: 15-minute-cron
 on:
   schedule:
-    - cron: '*/1 * * * *'
+    - cron: '5 * * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
@@ -9,4 +9,4 @@ jobs:
       - name: Call our API route
         run: |
           curl --request GET \
-          --url 'https://chart.minimog.co/' \
+          --url 'https://chart.minimog.co/api/crawl?shop=Minimog/' \
