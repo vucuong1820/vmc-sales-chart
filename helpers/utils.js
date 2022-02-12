@@ -97,7 +97,7 @@ export const buildAlert = (data) => {
 export const sendAlert = (payload) => {
   console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, "SLACK_WEBHOOK");
   try {
-    axios.post(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, JSON.stringify(payload));
+    axios.post("https://hooks.slack.com/services/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", JSON.stringify(payload));
   } catch (e) {
     console.log(e);
   }
