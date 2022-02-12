@@ -1,6 +1,6 @@
-const { format } = require("date-fns");
+import { format } from "date-fns";
 
-const themeShop = [
+export const themeShop = [
   {
     url: "https://themeforest.net/item/minimog-the-high-converting-shopify-theme/33380968",
     themeId: 33380968,
@@ -44,5 +44,3 @@ const themeShop = [
     created_at: format(new Date(), "MM/dd/yyyy"),
   },
 ];
-
-module.exports = themeShop;

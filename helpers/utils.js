@@ -6,7 +6,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import themeShop from "../constants/themeShop";
+import { themeShop } from "../constants/themeShop";
 export const getDateChart = (date) => {
   let today = new Date();
 

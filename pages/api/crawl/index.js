@@ -4,7 +4,7 @@ import format from "date-fns/format";
 import { getDateChart } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { themeData } from "../../../constants/themeData";
+import { themeShop } from "../../../constants/themeShop";
 dbConnect();
 
 export default async function handler(req, res) {
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const crawlData = async () => {
     try {
       const getFilterShop = () => {
-        return themeData.filter((item) => item.name === shop);
+        return themeShop.filter((item) => item.name === shop);
       };
       const filterShop = getFilterShop();
       const { fixedSales, name, themeId, url } = filterShop[0];

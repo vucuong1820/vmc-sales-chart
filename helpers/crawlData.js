@@ -3,12 +3,12 @@ import Customers from "../models/Customers";
 import format from "date-fns/format";
 import cheerio from "cheerio";
 import axios from "axios";
-import { themeData } from "../constants/themeData";
+import { themeShop } from "../constants/themeShop";
 dbConnect();
 
 export const crawlData = async () => {
   try {
-    themeData.forEach(async (theme) => {
+    themeShop.forEach(async (theme) => {
       let presentSales;
       let review;
       await axios.get(theme.url).then((res) => {
