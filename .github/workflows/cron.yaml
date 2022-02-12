@@ -9,4 +9,4 @@ jobs:
       - name: Call our API route
         run: |
           curl --request GET \
-          --url 'https://chart.minimog.co/api/crawl?shop=Minimog/' \
+          --url 'https://chart.minimog.co/api/crawl?shop=Minimog' \
