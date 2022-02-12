@@ -41,9 +41,8 @@ export default async function handler(req, res) {
     return result;
   };
   const boardData = await getData();
-  if (req.method === "POST") {
-    sendAlert(buildAlert(boardData));
-  }
+
+  sendAlert(buildAlert(boardData));
 
   res.json(buildAlert(boardData));
 }
