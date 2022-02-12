@@ -41,20 +41,23 @@ export default async function handler(req, res) {
     return result;
   };
   const boardData = await getData();
-  await fetch(
-    "https://hooks.slack.com/services/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",
-    {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
-      body: JSON.stringify(buildAlert(boardData)),
-    }
-  );
+  if (req.method === "GET") {
+    await fetch(
+      "https://hooks.slack.com/services/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",
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify(buildAlert(boardData)),
+      }
+    );
+  }
+
   res.json(buildAlert(boardData));
 }
