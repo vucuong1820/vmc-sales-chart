@@ -38,9 +38,7 @@ const Table = () => {
     };
     getData();
   }, []);
-
   const handleClick = () => {
-    console.log(buildAlert(rows));
     sendAlert(buildAlert(rows));
   };
   return (

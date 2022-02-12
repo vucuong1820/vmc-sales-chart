@@ -4,6 +4,7 @@ import format from "date-fns/format";
 import cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../constants/themeShop";
+import { getDateChart } from "./utils";
 dbConnect();
 
 export const crawlData = async () => {
