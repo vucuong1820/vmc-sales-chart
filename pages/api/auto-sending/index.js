@@ -42,7 +42,7 @@ export default async function handler(req, res) {
   };
   const boardData = await getData();
   if (req.method === "POST") {
-    await axios.post("https://hooks.slack.com/services/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", JSON.stringify(payload));
+    sendAlert(buildAlert(boardData));
   }
 
   res.json(buildAlert(boardData));
