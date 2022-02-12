@@ -42,5 +42,5 @@ export default async function handler(req, res) {
   };
   const boardData = await getData();
   sendAlert(buildAlert(boardData));
-  console.log("ABC")
+  res.json("AC");
 }
