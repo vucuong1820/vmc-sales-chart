@@ -4,7 +4,6 @@ import { buildAlert, getDateChart, sendAlert } from "../../../helpers/utils";
 import Customers from "../../../models/Customers";
 
 export default async function handler(req, res) {
-    
   // await crawlData();
 
   const getData = async () => {
@@ -42,6 +41,8 @@ export default async function handler(req, res) {
     return result;
   };
   const boardData = await getData();
-  // sendAlert(buildAlert(boardData));
+  if (req.method === "GET") {
+    sendAlert(buildAlert(boardData));
+  }
   res.json(buildAlert(boardData));
 }
