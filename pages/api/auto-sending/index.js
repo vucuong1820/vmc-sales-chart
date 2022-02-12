@@ -4,6 +4,7 @@ import { buildAlert, getDateChart, sendAlert } from "../../../helpers/utils";
 import Customers from "../../../models/Customers";
 
 export default async function handler(req, res) {
+  await crawlData();
 
   const getData = async () => {
     const result = [
@@ -41,4 +42,5 @@ export default async function handler(req, res) {
   };
   const boardData = await getData();
   sendAlert(buildAlert(boardData));
+  console.log("ABC")
 }
