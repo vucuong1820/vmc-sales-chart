@@ -2,9 +2,8 @@ import { themeShop } from "../../../constants/themeShop";
 import { crawlData } from "../../../helpers/crawlData";
 import { buildAlert, getDateChart, sendAlert } from "../../../helpers/utils";
 import Customers from "../../../models/Customers";
-
+import axios from "axios";
 export default async function handler(req, res) {
-    
   // await crawlData();
 
   const getData = async () => {
@@ -42,6 +41,9 @@ export default async function handler(req, res) {
     return result;
   };
   const boardData = await getData();
+  axios.post(
+    "https://hooks.slack.com/services/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",
+    JSON.stringify(boardData)
+  );
   // sendAlert(buildAlert(boardData));
-  res.json(buildAlert(boardData));
 }
