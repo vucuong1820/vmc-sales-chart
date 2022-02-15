@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         });
         return data;
       };
-
+      console.log(convertTZ(new Date(), "Asia/Jakarta"));
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
 
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: convertTZ(new Date(), "Asia/Jakarta"),
+          updatedAt: new Date(),
         },
         { upsert: true }
       );
