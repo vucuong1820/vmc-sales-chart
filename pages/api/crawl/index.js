@@ -51,7 +51,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: new Date(),
+          updatedAt: convertTZ(new Date(), "Asia/Jakarta"),
         },
         { upsert: true }
       );
