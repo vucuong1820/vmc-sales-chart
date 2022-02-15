@@ -61,6 +61,7 @@ export const crawlData = async () => {
             theme.fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
+          updatedAt: new Date(),
         },
         { upsert: true }
       );

@@ -16,7 +16,6 @@ export default async function handler(req, res) {
       };
       const filterShop = getFilterShop();
       const { fixedSales, name, themeId, url } = filterShop[0];
-
       let presentSales;
       let review;
       await axios.get(url).then((res) => {
@@ -52,6 +51,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
+          updatedAt: new Date(),
         },
         { upsert: true }
       );
