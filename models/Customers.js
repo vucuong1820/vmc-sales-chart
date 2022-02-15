@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const CustomersSchema = new mongoose.Schema(
   {
     name: {
@@ -22,6 +21,9 @@ const CustomersSchema = new mongoose.Schema(
     },
     sales: {
       type: Number,
+    },
+    updatedAt: {
+      type: String,
     },
   },
   { timestamps: true }
