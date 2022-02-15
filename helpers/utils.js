@@ -102,3 +102,11 @@ export const sendAlert = (payload) => {
     console.log(e);
   }
 };
+
+export const convertTZ = (date, tzString) => {
+  return new Date(
+    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
+      timeZone: tzString,
+    })
+  );
+};
