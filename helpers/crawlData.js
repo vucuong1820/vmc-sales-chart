@@ -5,7 +5,6 @@ import cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../constants/themeShop";
 import { convertTZ, getDateChart } from "./utils";
-import { utcToZonedTime } from "date-fns-tz";
 dbConnect();
 
 export const crawlData = async () => {
