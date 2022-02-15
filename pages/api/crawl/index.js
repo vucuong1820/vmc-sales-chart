@@ -5,6 +5,7 @@ import { getDateChart } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../../../constants/themeShop";
+import { utcToZonedTime } from "date-fns-tz";
 dbConnect();
 
 export default async function handler(req, res) {
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
 
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
-
+      console.log(utcToZonedTime(new Date(), "Asia/Bangkok"));
       await Customers.findOneAndUpdate(
         {
           created_at: format(new Date(), "MM/dd/yyyy"),
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: new Date(),
+          updatedAt: utcToZonedTime(new Date(), "Asia/Bangkok"),
         },
         { upsert: true }
       );
