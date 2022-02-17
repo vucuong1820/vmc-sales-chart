@@ -5,6 +5,7 @@ import { convertTZ, getDateChart } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../../../constants/themeShop";
+import { utcToZonedTime } from "date-fns-tz";
 dbConnect();
 
 export default async function handler(req, res) {
@@ -34,7 +35,6 @@ export default async function handler(req, res) {
         });
         return data;
       };
-      console.log(convertTZ(new Date(), "Asia/Jakarta"));
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
 
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: convertTZ(new Date(), "Asia/Jakarta"),
+          updatedAt: utcToZonedTime(new Date(), "Asia/Jakarta"),
         },
         { upsert: true }
       );
