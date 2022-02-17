@@ -25,6 +25,9 @@ const CustomersSchema = new mongoose.Schema(
     updatedAt: {
       type: String,
     },
+    updatedAt2: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
