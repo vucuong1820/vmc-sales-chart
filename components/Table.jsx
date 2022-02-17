@@ -5,14 +5,6 @@ import { useEffect, useState } from "react";
 import { buildAlert, sendAlert } from "../helpers/utils";
 import { themeShop } from "../constants/themeShop";
 const Table = ({ state }) => {
-  const [rows, setRows] = useState([
-    ["Minimog", 0, 0],
-    ["Wokiee", 0, 0],
-    ["Kalles", 0, 0],
-    ["Shella", 0, 0],
-    ["Gecko", 0, 0],
-    ["Ella", 0, 0],
-  ]);
   const [rowsUpdate, setRowsUpdate] = useState([
     ["Minimog", 0, 0],
     ["Wokiee", 0, 0],
