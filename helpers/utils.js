@@ -6,17 +6,22 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 import { themeShop } from "../constants/themeShop";
 export const getDateChart = (date) => {
-  let today = new Date();
-
-  let dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
-
+  const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+  let dayOfLastWeek = utcToZonedTime(
+    new Date(new Date().setDate(new Date().getDate() - 7)),
+    "Asia/Jakarta"
+  );
   switch (date) {
     case "this_week":
       return {
-        start: format(startOfWeek(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
-        end: format(endOfWeek(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
+        start: format(
+          startOfWeek(currentDate, { weekStartsOn: 1 }),
+          "MM/dd/yyyy"
+        ),
+        end: format(endOfWeek(currentDate, { weekStartsOn: 1 }), "MM/dd/yyyy"),
       };
     case "last_week":
       return {
@@ -31,8 +36,11 @@ export const getDateChart = (date) => {
       };
     case "this_month":
       return {
-        start: format(startOfMonth(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
-        end: format(endOfMonth(today, { weekStartsOn: 1 }), "MM/dd/yyyy"),
+        start: format(
+          startOfMonth(currentDate, { weekStartsOn: 1 }),
+          "MM/dd/yyyy"
+        ),
+        end: format(endOfMonth(currentDate, { weekStartsOn: 1 }), "MM/dd/yyyy"),
       };
 
     default:
@@ -102,16 +110,3 @@ export const sendAlert = (payload) => {
     console.log(e);
   }
 };
-
-export function convertUTCDateToLocalDate(date) {
-  var newDate = new Date(
-    date.getTime() + date.getTimezoneOffset() * 60 * 1000
-  );
-
-  var offset = date.getTimezoneOffset() / 60;
-  var hours = date.getHours();
-
-  newDate.setHours(hours - offset);
-
-  return newDate;
-}

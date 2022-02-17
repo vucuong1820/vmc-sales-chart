@@ -2,7 +2,6 @@ import dbConnect from "../../../utils/dbConnect";
 import Customers from "../../../models/Customers";
 import format from "date-fns/format";
 import {
-  convertUTCDateToLocalDate,
   getDateChart,
 } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
@@ -40,7 +39,8 @@ export default async function handler(req, res) {
       };
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
-
+      
+      const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
           created_at: format(new Date(), "MM/dd/yyyy"),
@@ -54,9 +54,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: utcToZonedTime(new Date(), "Asia/Jakarta"),
-          updatedAt2: convertUTCDateToLocalDate(new Date()),
-          updatedAt3: utcToZonedTime(new Date(), "Asia/Jakarta"),
+          updatedAt3: currentDate,
         },
         { upsert: true }
       );

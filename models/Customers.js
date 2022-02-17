@@ -22,12 +22,6 @@ const CustomersSchema = new mongoose.Schema(
     sales: {
       type: Number,
     },
-    updatedAt: {
-      type: String,
-    },
-    updatedAt2: {
-      type: String,
-    },
     updatedAt3: {
       type: String,
     },
