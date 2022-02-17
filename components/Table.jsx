@@ -24,6 +24,16 @@ const Table = ({ state }) => {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        themeShop.forEach(async (item) => {
+          await axios.get(`/api/crawl?shop=${item.name}`);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
     let data = [];
 
     for (let i = 0; i < themeShop.length; i++) {
@@ -65,8 +75,7 @@ const Table = ({ state }) => {
     setTitle((prev) => {
       if (filterDate.length === 0) {
         prev = startingText;
-      }
-      else if (filterDate.length === 1) {
+      } else if (filterDate.length === 1) {
         prev = startingText + filterDate[0];
       } else {
         prev =
@@ -78,31 +87,7 @@ const Table = ({ state }) => {
       return prev;
     });
   }, [state]);
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        themeShop.forEach(async (item) => {
-          const { data } = await axios.get(`/api/crawl?shop=${item.name}`);
-          const result = [...rows];
-          result.forEach((item1) => {
-            data.forEach((item2) => {
-              if (item1[0] === item2.name) {
-                item1[1] = item2.review;
-                item1[2] += item2.sales;
-              }
-            });
-          });
-          result.sort((a, b) => {
-            return b[2] - a[2];
-          });
-          setRows(result);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getData();
-  }, []);
+
   const handleClick = () => {
     sendAlert(buildAlert(rows));
   };
