@@ -63,7 +63,10 @@ const Table = ({ state }) => {
     ];
     let startingText = "Table of sales in ";
     setTitle((prev) => {
-      if (filterDate.length <= 1) {
+      if (filterDate.length === 0) {
+        prev = startingText;
+      }
+      else if (filterDate.length === 1) {
         prev = startingText + filterDate[0];
       } else {
         prev =
@@ -74,7 +77,6 @@ const Table = ({ state }) => {
       }
       return prev;
     });
-
   }, [state]);
   useEffect(() => {
     const getData = async () => {
