@@ -71,7 +71,7 @@ const Table = ({ state }) => {
       result.sort((a, b) => {
         return b[2] - a[2];
       });
-      setRows(result);
+      setRowsUpdate(result);
     });
 
     //Setting up title of table
@@ -103,7 +103,7 @@ const Table = ({ state }) => {
       try {
         themeShop.forEach(async (item) => {
           const { data } = await axios.get(`/api/crawl?shop=${item.name}`);
-          const result = [...rows];
+          const result = [...rowsOfSlack];
           result.forEach((item1) => {
             data.forEach((item2) => {
               if (item1[0] === item2.name) {
@@ -137,7 +137,7 @@ const Table = ({ state }) => {
         <DataTable
           columnContentTypes={["text", "numeric", "numeric"]}
           headings={["Name", "Rating", "Sales"]}
-          rows={rows}
+          rows={rowsUpdate}
         />
       </Card>
     </Layout.Section>
