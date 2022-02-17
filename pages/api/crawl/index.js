@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
-          created_at: format(new Date(), "MM/dd/yyyy"),
+          created_at: format(currentDate , "MM/dd/yyyy"),
           themeId: themeId,
           name: name,
         },
