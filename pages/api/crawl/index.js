@@ -56,6 +56,7 @@ export default async function handler(req, res) {
           review: Number(parseFloat(review.match(/[\d\.]+/))),
           updatedAt: convertUTCDateToLocalDate(new Date()),
           updatedAt2: convertUTCDateToLocalDate(new Date()),
+          updatedAt3: utcToZonedTime(new Date(), "Asia/Jakarta"),
         },
         { upsert: true }
       );
