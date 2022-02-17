@@ -21,6 +21,15 @@ const Table = ({ state }) => {
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
   ]);
+  const [rowsOfSlack, setRowsOfSlack] = useState([
+    ["Minimog", 0, 0],
+    ["Wokiee", 0, 0],
+    ["Kalles", 0, 0],
+    ["Shella", 0, 0],
+    ["Gecko", 0, 0],
+    ["Ella", 0, 0],
+  ]);
+
   const [title, setTitle] = useState("");
 
   useEffect(() => {
@@ -87,9 +96,33 @@ const Table = ({ state }) => {
       return prev;
     });
   }, [state]);
-
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        themeShop.forEach(async (item) => {
+          const { data } = await axios.get(`/api/crawl?shop=${item.name}`);
+          const result = [...rows];
+          result.forEach((item1) => {
+            data.forEach((item2) => {
+              if (item1[0] === item2.name) {
+                item1[1] = item2.review;
+                item1[2] += item2.sales;
+              }
+            });
+          });
+          result.sort((a, b) => {
+            return b[2] - a[2];
+          });
+          setRowsOfSlack(result);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
+  }, []);
   const handleClick = () => {
-    sendAlert(buildAlert(rows));
+    sendAlert(buildAlert(rowsOfSlack));
   };
 
   return (
