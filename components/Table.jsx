@@ -25,16 +25,6 @@ const Table = ({ state }) => {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        themeShop.forEach(async (item) => {
-          await axios.get(`/api/crawl?shop=${item.name}`);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getData();
     let data = [];
 
     for (let i = 0; i < themeShop.length; i++) {
@@ -114,7 +104,7 @@ const Table = ({ state }) => {
       }
     };
     getData();
-  }, [state]);
+  }, []);
   const handleClick = () => {
     sendAlert(buildAlert(rowsOfSlack));
   };
