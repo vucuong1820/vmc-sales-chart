@@ -13,7 +13,6 @@ const Options = ({ setState }) => {
     start: new Date(),
     end: new Date(),
   });
-  console.log(selectedTimeRange);
   useEffect(() => {
     const getData = async () => {
       let time;
