@@ -114,7 +114,7 @@ const Table = ({ state }) => {
       }
     };
     getData();
-  }, []);
+  }, [state]);
   const handleClick = () => {
     sendAlert(buildAlert(rowsOfSlack));
   };
