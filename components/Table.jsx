@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { buildAlert, sendAlert } from "../helpers/utils";
 import { themeShop } from "../constants/themeShop";
-const Table = () => {
+const Table = ({ state }) => {
   const [rows, setRows] = useState([
     ["Minimog", 0, 0],
     ["Wokiee", 0, 0],
@@ -13,6 +13,43 @@ const Table = () => {
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
   ]);
+  const [rowsUpdate, setRowsUpdate] = useState([
+    ["Minimog", 0, 0],
+    ["Wokiee", 0, 0],
+    ["Kalles", 0, 0],
+    ["Shella", 0, 0],
+    ["Gecko", 0, 0],
+    ["Ella", 0, 0],
+  ]);
+  useEffect(() => {
+    let data = [];
+
+    for (let i = 0; i < themeShop.length; i++) {
+      data.push(state.filter((item) => themeShop[i].name === item.name));
+    }
+    data.forEach((theme) => {
+      let sale = 0;
+      let rating = 0;
+      let name;
+      const result = [...rowsUpdate];
+      themeShop.forEach((item) => {
+        for (let i = 0; i < theme.length; i++) {
+          if (item.name === theme[i].name) {
+            sale += theme[i].sales;
+            rating = theme[i].review;
+            name = item.name;
+          }
+        }
+      });
+      result.forEach((item) => {
+        if (item[0] === name) {
+          item[2] = sale;
+          item[1] = rating;
+        }
+      });
+      setRows(result);
+    });
+  }, [state]);
   useEffect(() => {
     const getData = async () => {
       try {

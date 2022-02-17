@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { Card, Layout } from "@shopify/polaris";
-import Options from "./microComponents/Options";
 import { themeChart } from "../../constants/themeChart";
 
-const ChartPreview = () => {
-  const [state, setState] = useState([]);
+const ChartPreview = ({ state }) => {
   const [inputData, setInputData] = useState([]);
   const [days, setDays] = useState([]);
   useEffect(() => {
@@ -35,11 +33,8 @@ const ChartPreview = () => {
   }, [state]);
   return (
     <div style={{ marginBottom: "30px", width: "100%" }}>
-      <Layout.Section >
+      <Layout.Section>
         <Card sectioned title="Chart">
-          <div style={{ marginBottom: "30px" }}>
-            <Options setState={setState} />
-          </div>
           <Line
             data={{
               datasets: inputData,

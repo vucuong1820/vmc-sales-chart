@@ -2,7 +2,7 @@ import { Button, DatePicker, Select } from "@shopify/polaris";
 import axios from "axios";
 import { format, getMonth, getYear } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { getDateChart } from "../../../helpers/utils";
+import { getDateChart } from "../../helpers/utils";
 const Options = ({ setState }) => {
   const [selected, setSelected] = useState("this_week");
   const [{ month, year }, setDate] = useState({
@@ -58,7 +58,7 @@ const Options = ({ setState }) => {
 
   return (
     <div>
-      <div style={{width: '200px'}}>
+      <div style={{ width: "200px" }}>
         <Select
           options={options}
           value={selected}
@@ -66,7 +66,7 @@ const Options = ({ setState }) => {
         />
       </div>
       {selected === "custom_time" && (
-        <div style={{marginTop: 30}}>
+        <div style={{ marginTop: 30 }}>
           <DatePicker
             month={month}
             year={year}

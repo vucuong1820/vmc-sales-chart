@@ -4,7 +4,7 @@ import format from "date-fns/format";
 import cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../constants/themeShop";
-import { convertTZ, getDateChart } from "./utils";
+import { utcToZonedTime } from "date-fns-tz";
 dbConnect();
 
 export const crawlData = async () => {
@@ -48,6 +48,7 @@ export const crawlData = async () => {
       //     { upsert: true }
       //   );
       // } else {
+      const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
           created_at: format(new Date(), "MM/dd/yyyy"),
@@ -61,7 +62,7 @@ export const crawlData = async () => {
             theme.fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: convertTZ(new Date(), "Asia/Jakarta"),
+          updatedAt3: currentDate,
         },
         { upsert: true }
       );
