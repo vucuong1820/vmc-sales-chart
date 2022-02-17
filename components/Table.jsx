@@ -21,6 +21,8 @@ const Table = ({ state }) => {
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
   ]);
+  const [title, setTitle] = useState("");
+
   useEffect(() => {
     let data = [];
 
@@ -47,8 +49,32 @@ const Table = ({ state }) => {
           item[1] = rating;
         }
       });
+      result.sort((a, b) => {
+        return b[2] - a[2];
+      });
       setRows(result);
     });
+
+    //Setting up title of table
+    const filterDate = [
+      ...new Map(
+        state.map((item) => [item.created_at, item.created_at])
+      ).values(),
+    ];
+    let startingText = "Table of sales in ";
+    setTitle((prev) => {
+      if (filterDate.length < 1) {
+        prev = startingText + filterDate[0];
+      } else {
+        prev =
+          startingText +
+          filterDate[0] +
+          " to " +
+          filterDate[filterDate.length - 1];
+      }
+      return prev;
+    });
+
   }, [state]);
   useEffect(() => {
     const getData = async () => {
@@ -78,10 +104,11 @@ const Table = ({ state }) => {
   const handleClick = () => {
     sendAlert(buildAlert(rows));
   };
+
   return (
     <Layout.Section fullWidth>
       <Card
-        title="Table of sales in the week"
+        title={title}
         sectioned
         actions={[{ content: "Post to Slack", onAction: () => handleClick() }]}
       >

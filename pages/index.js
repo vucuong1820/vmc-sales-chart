@@ -9,7 +9,9 @@ const Home = () => {
   return (
     <AppProvider i18n={translations}>
       <Page title="DashBoard">
-        <Options setState={setState} />
+        <div style={{ marginBottom: "10px" }}>
+          <Options setState={setState} />
+        </div>
         <Layout>
           <Table state={state} />
           <Chart state={state} />
