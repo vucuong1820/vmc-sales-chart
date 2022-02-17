@@ -63,7 +63,7 @@ const Table = ({ state }) => {
     ];
     let startingText = "Table of sales in ";
     setTitle((prev) => {
-      if (filterDate.length < 1) {
+      if (filterDate.length <= 1) {
         prev = startingText + filterDate[0];
       } else {
         prev =
