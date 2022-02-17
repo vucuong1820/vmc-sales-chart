@@ -103,10 +103,15 @@ export const sendAlert = (payload) => {
   }
 };
 
-export const convertTZ = (date, tzString) => {
-  return new Date(
-    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
-      timeZone: tzString,
-    })
+export function convertUTCDateToLocalDate(date) {
+  var newDate = new Date(
+    date.getTime() + date.getTimezoneOffset() * 60 * 1000
   );
-};
+
+  var offset = date.getTimezoneOffset() / 60;
+  var hours = date.getHours();
+
+  newDate.setHours(hours - offset);
+
+  return newDate;
+}
