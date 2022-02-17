@@ -37,10 +37,12 @@ export default async function handler(req, res) {
       };
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
-
+      const time = new Date().getTime();
+      const date = new Date(time);
+      console.log(date.toLocaleDateString());
       await Customers.findOneAndUpdate(
         {
-          created_at: format(new Date(), "MM/dd/yyyy"),
+          created_at: date.toLocaleDateString(),
           themeId: themeId,
           name: name,
         },
@@ -51,7 +53,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: utcToZonedTime(new Date(), "Asia/Jakarta"),
+          updatedAt: date.toLocaleDateString(),
         },
         { upsert: true }
       );
