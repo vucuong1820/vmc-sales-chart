@@ -30,24 +30,31 @@ const Table = ({ state }) => {
     for (let i = 0; i < themeShop.length; i++) {
       data.push(state.filter((item) => themeShop[i].name === item.name));
     }
-
-    const dataTable = data.map((item) => {
-      return item.reduce((prev, cur) => {
-        if (!prev[0] && !prev[1] && !prev[2]) {
-          prev[0] = "";
-          prev[1] = 0;
-          prev[2] = 0;
+    data.forEach((theme) => {
+      let sale = 0;
+      let rating = 0;
+      let name;
+      const result = [...rowsUpdate];
+      themeShop.forEach((item) => {
+        for (let i = 0; i < theme.length; i++) {
+          if (item.name === theme[i].name) {
+            sale += theme[i].sales;
+            rating = theme[i].review;
+            name = item.name;
+          }
         }
-        prev[0] = cur.name;
-        prev[1] = cur.review;
-        prev[2] += cur.sales;
-        return prev;
-      }, []);
+      });
+      result.forEach((item) => {
+        if (item[0] === name) {
+          item[2] = sale;
+          item[1] = rating;
+        }
+      });
+      result.sort((a, b) => {
+        return b[2] - a[2];
+      });
+      setRowsUpdate(result);
     });
-    dataTable.sort((a, b) => {
-      return b[2] - a[2];
-    });
-    setRowsUpdate(dataTable);
 
     //Setting up title of table
     const filterDate = [
