@@ -35,14 +35,7 @@ export default async function handler(req, res) {
         });
         return data;
       };
-      const currentDate1 = utcToZonedTime(new Date(), "Asia/Jakarta");
 
-      const tomorrow = new Date(currentDate1);
-
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(tomorrow.getHours() + 15);
-      tomorrow.setMinutes(tomorrow.getMinutes() + 15);
-      console.log(tomorrow);
       const previousDate = await getPreviousData();
 
       const filterData = previousDate.filter((item) => item.name === name);
@@ -50,7 +43,7 @@ export default async function handler(req, res) {
       const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
-          created_at: format(tomorrow, "MM/dd/yyyy"),
+          created_at: format(currentDate, "MM/dd/yyyy"),
           themeId: themeId,
           name: name,
         },
@@ -61,7 +54,7 @@ export default async function handler(req, res) {
             fixedSales -
             filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt3: tomorrow,
+          updatedAt3: currentDate,
         },
         { upsert: true }
       );
