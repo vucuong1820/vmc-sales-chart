@@ -1,9 +1,7 @@
 import dbConnect from "../../../utils/dbConnect";
 import Customers from "../../../models/Customers";
 import format from "date-fns/format";
-import {
-  getDateChart,
-} from "../../../helpers/utils";
+import { getDateChart } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../../../constants/themeShop";
@@ -37,13 +35,34 @@ export default async function handler(req, res) {
         });
         return data;
       };
+      const getPreviousDataTest = async () => {
+        const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+        const yesterday = new Date(currentDate);
+
+        yesterday.setDate(yesterday.getDate() - 1);
+        const data = await Customers.find({
+          created_at: format(yesterday, "MM/dd/yyyy"),
+        });
+        return data;
+      };
+
       const previousDate = await getPreviousData();
+      const previousDateTest = await getPreviousDataTest();
+
       const filterData = previousDate.filter((item) => item.name === name);
-      
+      const filterData1 = previousDateTest.filter((item) => item.name === name);
+
+      // console.log(filterData);
+      console.log(filterData1);
+      console.log(
+        Number(presentSales.replace(/\D/g, "")) -
+          fixedSales -
+          filterData1[0].quantity
+      );
       const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
-          created_at: format(new Date(), "MM/dd/yyyy"),
+          created_at: format(currentDate, "MM/dd/yyyy"),
           themeId: themeId,
           name: name,
         },
@@ -52,7 +71,7 @@ export default async function handler(req, res) {
           sales:
             Number(presentSales.replace(/\D/g, "")) -
             fixedSales -
-            filterData[0].quantity,
+            filterData1[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
           updatedAt3: currentDate,
         },
