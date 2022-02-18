@@ -26,16 +26,6 @@ export default async function handler(req, res) {
       });
 
       const getPreviousData = async () => {
-        const today = new Date();
-        const yesterday = new Date(today);
-
-        yesterday.setDate(yesterday.getDate() - 1);
-        const data = await Customers.find({
-          created_at: format(yesterday, "MM/dd/yyyy"),
-        });
-        return data;
-      };
-      const getPreviousDataTest = async () => {
         const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
         const yesterday = new Date(currentDate);
 
@@ -47,18 +37,9 @@ export default async function handler(req, res) {
       };
 
       const previousDate = await getPreviousData();
-      const previousDateTest = await getPreviousDataTest();
 
       const filterData = previousDate.filter((item) => item.name === name);
-      const filterData1 = previousDateTest.filter((item) => item.name === name);
-
-      // console.log(filterData);
-      console.log(filterData1);
-      console.log(
-        Number(presentSales.replace(/\D/g, "")) -
-          fixedSales -
-          filterData1[0].quantity
-      );
+      
       const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
@@ -71,7 +52,7 @@ export default async function handler(req, res) {
           sales:
             Number(presentSales.replace(/\D/g, "")) -
             fixedSales -
-            filterData1[0].quantity,
+            filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
           updatedAt3: currentDate,
         },
