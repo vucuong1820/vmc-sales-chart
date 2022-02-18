@@ -18,8 +18,8 @@ export const crawlData = async () => {
         review = $(".is-visually-hidden").text();
       });
       const getPreviousData = async () => {
-        const today = new Date();
-        const yesterday = new Date(today);
+        const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+        const yesterday = new Date(currentDate);
 
         yesterday.setDate(yesterday.getDate() - 1);
         const data = await Customers.find({
@@ -51,7 +51,7 @@ export const crawlData = async () => {
       const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
       await Customers.findOneAndUpdate(
         {
-          created_at: format(new Date(), "MM/dd/yyyy"),
+          created_at: format(currentDate, "MM/dd/yyyy"),
           themeId: theme.themeId,
           name: theme.name,
         },
