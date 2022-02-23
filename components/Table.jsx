@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { buildAlert, sendAlert } from "../helpers/utils";
 import { themeShop } from "../constants/themeShop";
+import { dataSolving } from "../helpers/dataSolving";
 const Table = ({ state }) => {
   const [rowsUpdate, setRowsUpdate] = useState([
     ["Minimog", 0, 0],
@@ -32,33 +33,7 @@ const Table = ({ state }) => {
       filterData.push(state.filter((item) => themeShop[i].name === item.name));
     }
 
-    const result = [...rowsUpdate];
-
-    const data = filterData.map((theme) => {
-      return theme.reduce(
-        (prev, cur) => {
-          prev[0] = cur.name;
-          prev[1] = cur.review;
-          prev[2] += cur.sales;
-          return prev;
-        },
-        ["", 0, 0]
-      );
-    });
-
-    result.map((result) => {
-      data.forEach((item) => {
-        if (result[0] === item[0]) {
-          result[1] = item[1];
-          result[2] = item[2];
-        }
-      });
-    });
-
-    result.sort((a, b) => {
-      return b[2] - a[2];
-    });
-    setRowsUpdate(result);
+    dataSolving(rowsUpdate, filterData, setRowsUpdate);
 
     //Setting up title of table
     const filterDate = [
@@ -95,32 +70,7 @@ const Table = ({ state }) => {
           })
         );
 
-        const result = [...rowsOfSlack];
-        const data = filterData.map((theme) => {
-          return theme.reduce(
-            (prev, cur) => {
-              prev[0] = cur.name;
-              prev[1] = cur.review;
-              prev[2] += cur.sales;
-              return prev;
-            },
-            ["", 0, 0]
-          );
-        });
-
-        result.map((result) => {
-          data.forEach((item) => {
-            if (result[0] === item[0]) {
-              result[1] = item[1];
-              result[2] = item[2];
-            }
-          });
-        });
-
-        result.sort((a, b) => {
-          return b[2] - a[2];
-        });
-        setRowsOfSlack(result);
+        dataSolving(rowsOfSlack, filterData, setRowsOfSlack);
       } catch (error) {
         console.log(error);
       }
