@@ -52,6 +52,7 @@ const Table = ({ state }) => {
       data.forEach((item) => {
         if (result[0] === item[0]) {
           result[1] = item[1];
+          result[2] = item[2];
         }
       });
     });
