@@ -22,14 +22,6 @@ const Table = ({ state }) => {
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
   ]);
-  const [rowsOfSlackTest, setRowsOfSlackTest] = useState([
-    ["Minimog", 0, 0],
-    ["Wokiee", 0, 0],
-    ["Kalles", 0, 0],
-    ["Shella", 0, 0],
-    ["Gecko", 0, 0],
-    ["Ella", 0, 0],
-  ]);
 
   const [title, setTitle] = useState("");
 
@@ -57,10 +49,9 @@ const Table = ({ state }) => {
     });
 
     result.map((result) => {
-      data.forEach((test) => {
-        if (result[0] === test[0]) {
-          result[1] = test[1];
-          result[2] = test[2];
+      data.forEach((item) => {
+        if (result[0] === item[0]) {
+          result[1] = item[1];
         }
       });
     });
@@ -97,7 +88,6 @@ const Table = ({ state }) => {
   useEffect(() => {
     const getData = async () => {
       try {
-        // Test
         const filterData = [];
         await Promise.all(
           themeShop.map(async (theme) => {
@@ -106,8 +96,8 @@ const Table = ({ state }) => {
           })
         );
 
-        const testResult = [...rowsOfSlackTest];
-        const testData = filterData.map((theme) => {
+        const result = [...rowsOfSlack];
+        const data = filterData.map((theme) => {
           return theme.reduce((prev, cur) => {
             if (!prev[0] && !prev[1] && !prev[2]) {
               prev[0] = "";
@@ -121,38 +111,20 @@ const Table = ({ state }) => {
           }, []);
         });
 
-        testResult.map((result) => {
-          testData.forEach((test) => {
-            if (result[0] === test[0]) {
-              result[1] = test[1];
-              result[2] = test[2];
+        result.map((result) => {
+          data.forEach((item) => {
+            if (result[0] === item[0]) {
+              result[1] = item[1];
+              result[2] = item[2];
             }
           });
         });
 
-        testResult.sort((a, b) => {
+        result.sort((a, b) => {
           return b[2] - a[2];
         });
-        setRowsOfSlackTest(testResult);
-        console.log(rowsOfSlackTest);
-        // Test
-
-        // themeShop.forEach(async (item) => {
-        //   const { data } = await axios.get(`/api/crawl?shop=${item.name}`);
-        //   const result = [...rowsOfSlack];
-        //   result.forEach((item1) => {
-        //     data.forEach((item2) => {
-        //       if (item1[0] === item2.name) {
-        //         item1[1] = item2.review;
-        //         item1[2] += item2.sales;
-        //       }
-        //     });
-        //   });
-        //   result.sort((a, b) => {
-        //     return b[2] - a[2];
-        //   });
-        //   setRowsOfSlack(result);
-        // });
+        setRowsOfSlack(result);
+        console.log(rowsOfSlack);
       } catch (error) {
         console.log(error);
       }
@@ -160,7 +132,7 @@ const Table = ({ state }) => {
     getData();
   }, []);
   const handleClick = () => {
-    sendAlert(buildAlert(rowsOfSlackTest));
+    sendAlert(buildAlert(rowsOfSlack));
   };
 
   return (
