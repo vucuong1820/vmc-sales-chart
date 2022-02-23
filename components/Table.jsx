@@ -35,17 +35,15 @@ const Table = ({ state }) => {
     const result = [...rowsUpdate];
 
     const data = filterData.map((theme) => {
-      return theme.reduce((prev, cur) => {
-        if (!prev[0] && !prev[1] && !prev[2]) {
-          prev[0] = "";
-          prev[1] = 0;
-          prev[2] = 0;
-        }
-        prev[0] = cur.name;
-        prev[1] = cur.review;
-        prev[2] += cur.sales;
-        return prev;
-      }, []);
+      return theme.reduce(
+        (prev, cur) => {
+          prev[0] = cur.name;
+          prev[1] = cur.review;
+          prev[2] += cur.sales;
+          return prev;
+        },
+        ["", 0, 0]
+      );
     });
 
     result.map((result) => {
@@ -99,17 +97,15 @@ const Table = ({ state }) => {
 
         const result = [...rowsOfSlack];
         const data = filterData.map((theme) => {
-          return theme.reduce((prev, cur) => {
-            if (!prev[0] && !prev[1] && !prev[2]) {
-              prev[0] = "";
-              prev[1] = 0;
-              prev[2] = 0;
-            }
-            prev[0] = cur.name;
-            prev[1] = cur.review;
-            prev[2] += cur.sales;
-            return prev;
-          }, []);
+          return theme.reduce(
+            (prev, cur) => {
+              prev[0] = cur.name;
+              prev[1] = cur.review;
+              prev[2] += cur.sales;
+              return prev;
+            },
+            ["", 0, 0]
+          );
         });
 
         result.map((result) => {
