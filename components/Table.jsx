@@ -124,7 +124,6 @@ const Table = ({ state }) => {
           return b[2] - a[2];
         });
         setRowsOfSlack(result);
-        console.log(rowsOfSlack);
       } catch (error) {
         console.log(error);
       }
