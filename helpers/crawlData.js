@@ -18,7 +18,7 @@ export const crawlData = async () => {
         review = $(".is-visually-hidden").text();
       });
       const getPreviousData = async () => {
-        const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+        const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
         const yesterday = new Date(currentDate);
 
         yesterday.setDate(yesterday.getDate() - 1);
@@ -48,7 +48,7 @@ export const crawlData = async () => {
       //     { upsert: true }
       //   );
       // } else {
-      const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+      const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
       await Customers.findOneAndUpdate(
         {
           created_at: format(currentDate, "MM/dd/yyyy"),

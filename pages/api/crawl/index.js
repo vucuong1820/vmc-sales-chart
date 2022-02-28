@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       });
 
       const getPreviousData = async () => {
-        const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+        const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
         const yesterday = new Date(currentDate);
 
         yesterday.setDate(yesterday.getDate() - 1);
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
       const filterData = previousDate.filter((item) => item.name === name);
 
-      const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+      const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
       await Customers.findOneAndUpdate(
         {
           created_at: format(currentDate, "MM/dd/yyyy"),

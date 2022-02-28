@@ -9,10 +9,10 @@ import {
 import { utcToZonedTime } from "date-fns-tz";
 import { themeShop } from "../constants/themeShop";
 export const getDateChart = (date) => {
-  const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+  const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
   let dayOfLastWeek = utcToZonedTime(
     new Date(new Date().setDate(new Date().getDate() - 7)),
-    "Asia/Jakarta"
+    "Australia/Sydney"
   );
   switch (date) {
     case "this_week":

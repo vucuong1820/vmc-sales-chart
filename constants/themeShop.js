@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
-const currentDate = utcToZonedTime(new Date(), "Asia/Jakarta");
+const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
 export const themeShop = [
   {
     url: "https://themeforest.net/item/minimog-the-high-converting-shopify-theme/33380968",

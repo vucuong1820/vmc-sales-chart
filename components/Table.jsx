@@ -27,7 +27,7 @@ const Table = ({ state }) => {
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    let filterData = [];
+    const filterData = [];
 
     for (let i = 0; i < themeShop.length; i++) {
       filterData.push(state.filter((item) => themeShop[i].name === item.name));
@@ -69,7 +69,6 @@ const Table = ({ state }) => {
             filterData.push(data);
           })
         );
-
         dataSolving(rowsOfSlack, filterData, setRowsOfSlack);
       } catch (error) {
         console.log(error);
