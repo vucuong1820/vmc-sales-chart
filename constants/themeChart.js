@@ -7,6 +7,13 @@ export const themeChart = [
     url: "https://themeforest.net/item/minimog-the-high-converting-shopify-theme/33380968",
   },
   {
+    label: "Avone",
+    fill: false,
+    borderColor: "#A01855FF",
+    tension: 0.3,
+    url: "https://themeforest.net/item/avone-multipurpose-shopify-theme/24276567",
+  },
+  {
     label: "Ella",
     fill: false,
     borderColor: "#2C5F2D",

@@ -39,25 +39,42 @@ export default async function handler(req, res) {
       const previousDate = await getPreviousData();
 
       const filterData = previousDate.filter((item) => item.name === name);
-
       const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
-      await Customers.findOneAndUpdate(
-        {
-          created_at: format(currentDate, "MM/dd/yyyy"),
-          themeId: themeId,
-          name: name,
-        },
-        {
-          quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
-          sales:
-            Number(presentSales.replace(/\D/g, "")) -
-            fixedSales -
-            filterData[0].quantity,
-          review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt3: currentDate,
-        },
-        { upsert: true }
-      );
+      const yesterday = new Date(currentDate);
+      yesterday.setDate(yesterday.getDate() - 1);
+      if (filterData.length === 0) {
+        await Customers.findOneAndUpdate(
+          {
+            created_at: format(yesterday, "MM/dd/yyyy"),
+            themeId: themeId,
+            name: name,
+          },
+          {
+            quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
+            sales: Number(presentSales.replace(/\D/g, "")) - fixedSales,
+            review: Number(parseFloat(review.match(/[\d\.]+/))),
+          },
+          { upsert: true }
+        );
+      } else {
+        await Customers.findOneAndUpdate(
+          {
+            created_at: format(currentDate, "MM/dd/yyyy"),
+            themeId: themeId,
+            name: name,
+          },
+          {
+            quantity: Number(presentSales.replace(/\D/g, "")) - fixedSales,
+            sales:
+              Number(presentSales.replace(/\D/g, "")) -
+              fixedSales -
+              filterData[0].quantity,
+            review: Number(parseFloat(review.match(/[\d\.]+/))),
+            updatedAt3: currentDate,
+          },
+          { upsert: true }
+        );
+      }
     } catch (error) {
       console.log(error);
     }

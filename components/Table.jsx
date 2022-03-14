@@ -13,6 +13,7 @@ const Table = ({ state }) => {
     ["Shella", 0, 0],
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
+    ["Avone", 0, 0],
   ]);
 
   const [rowsOfSlack, setRowsOfSlack] = useState([
@@ -22,6 +23,7 @@ const Table = ({ state }) => {
     ["Shella", 0, 0],
     ["Gecko", 0, 0],
     ["Ella", 0, 0],
+    ["Avone", 0, 0],
   ]);
 
   const [title, setTitle] = useState("");

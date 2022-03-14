@@ -10,6 +10,13 @@ export const themeShop = [
     created_at: format(currentDate, "MM/dd/yyyy"),
   },
   {
+    url: "https://themeforest.net/item/avone-multipurpose-shopify-theme/24276567",
+    themeId: 24276567,
+    name: "Avone",
+    fixedSales: 6351,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
     url: "https://themeforest.net/item/ella-responsive-shopify-template/9691007",
     themeId: 9691007,
     name: "Ella",
