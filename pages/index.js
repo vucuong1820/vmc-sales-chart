@@ -1,22 +1,34 @@
-import { AppProvider, Layout, Page } from "@shopify/polaris";
-import Chart from "../components/Chart/Chart";
-import Table from "../components/Table";
-import translations from "@shopify/polaris/locales/en.json";
-import { useState } from "react";
-import Options from "../components/microComponents/Options";
+import { AppProvider, Layout, Page, Card } from "@shopify/polaris";
+import Chart from "../components/Chart";
+import SaleGrowthChart from "../components/SalesGrowth";
+import {useEffect} from "react";
+import {themeShop} from "../constants/themeShop";
+import axios from "axios";
 const Home = () => {
-  const [state, setState] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        themeShop.forEach(async (item) => {
+          await axios.get(`/api/crawl?theme=${item.name}`);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
+  }, []);
   return (
-    <AppProvider i18n={translations}>
-      <Page title="DashBoard">
-        <div style={{ marginBottom: "10px" }}>
-          <Options setState={setState} />
-        </div>
-        <Layout>
-          <Table state={state} />
-          <Chart state={state} />
-        </Layout>
-      </Page>
+    <AppProvider>
+      <div style={{padding: '3rem 0'}}>
+        <Page>
+          <Layout>
+            <Layout.Section>
+              <Chart />
+              <SaleGrowthChart />
+            </Layout.Section>
+          </Layout>
+        </Page>
+      </div>
     </AppProvider>
   );
 };

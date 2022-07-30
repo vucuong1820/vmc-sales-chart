@@ -1,7 +1,7 @@
 import dbConnect from "../../../utils/dbConnect";
 import Customers from "../../../models/Customers";
 import format from "date-fns/format";
-import { getDateChart } from "../../../helpers/utils";
+import { getDateRange } from "../../../helpers/utils";
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { themeShop } from "../../../constants/themeShop";
@@ -9,14 +9,12 @@ import { utcToZonedTime } from "date-fns-tz";
 dbConnect();
 
 export default async function handler(req, res) {
-  const { shop } = req.query;
+  const { theme } = req.query;
   const crawlData = async () => {
     try {
-      const getFilterShop = () => {
-        return themeShop.filter((item) => item.name === shop);
-      };
-      const filterShop = getFilterShop();
-      const { fixedSales, name, themeId, url } = filterShop[0];
+      const currentTheme = themeShop.find((item) => item.name === theme);
+      console.log(currentTheme, 'currentTheme')
+      const { fixedSales, name, themeId, url } = currentTheme;
       let presentSales;
       let review;
       await axios.get(url).then((res) => {
@@ -82,16 +80,16 @@ export default async function handler(req, res) {
   await crawlData();
 
   const getData = async () => {
-    let time = getDateChart("this_week");
+    let time = getDateRange("this_week");
     await Customers.find({
       created_at: {
-        $gte: time.start,
-        $lte: time.end,
+        $gte: format(time.start, 'MM/dd/yyyy'),
+        $lte: format(time.end, 'MM/dd/yyyy')
       },
     })
       .exec()
       .then((data) => {
-        const filterData = data.filter((item) => item.name === shop);
+        const filterData = data.filter((item) => item.name === theme);
         res.json(filterData);
       });
   };

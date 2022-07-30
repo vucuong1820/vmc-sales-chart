@@ -1,63 +1,86 @@
 import axios from "axios";
 import {
-  endOfMonth,
-  endOfWeek,
-  format,
-  startOfMonth,
-  startOfWeek,
+  subDays, endOfToday,
+  endOfWeek, endOfYear, endOfYesterday,
+  format, compareDesc,
+  startOfMonth, startOfToday,
+  startOfWeek, startOfYear, startOfYesterday, formatDistanceStrict
 } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
-import { themeShop } from "../constants/themeShop";
-export const getDateChart = (date) => {
-  const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
-  let dayOfLastWeek = utcToZonedTime(
-    new Date(new Date().setDate(new Date().getDate() - 7)),
-    "Australia/Sydney"
-  );
-  switch (date) {
-    case "this_week":
-      return {
-        start: format(
-          startOfWeek(currentDate, { weekStartsOn: 1 }),
-          "MM/dd/yyyy"
-        ),
-        end: format(endOfWeek(currentDate, { weekStartsOn: 1 }), "MM/dd/yyyy"),
-      };
-    case "last_week":
-      return {
-        start: format(
-          startOfWeek(dayOfLastWeek, { weekStartsOn: 1 }),
-          "MM/dd/yyyy"
-        ),
-        end: format(
-          endOfWeek(dayOfLastWeek, { weekStartsOn: 1 }),
-          "MM/dd/yyyy"
-        ),
-      };
-    case "this_month":
-      return {
-        start: format(
-          startOfMonth(currentDate, { weekStartsOn: 1 }),
-          "MM/dd/yyyy"
-        ),
-        end: format(endOfMonth(currentDate, { weekStartsOn: 1 }), "MM/dd/yyyy"),
-      };
+import { themeChart } from "../constants/themeChart";
 
+export const getDateRange = (date) => {
+  let today = new Date();
+  let dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
+
+  let range
+
+  switch (date) {
+    case "today":
+      range = {start: startOfToday(), end: endOfToday()}
+      break
+    case "yesterday":
+      range = {start: startOfYesterday(), end: endOfYesterday()}
+      break
+    case "last_7_days":
+      range = {start: new Date(new Date().setDate(new Date().getDate() - 7)), end: new Date(new Date().setDate(new Date().getDate() - 1))}
+      break
+    case "last_30_days":
+      range = {start: new Date(new Date().setDate(new Date().getDate() - 30)), end: new Date(new Date().setDate(new Date().getDate() - 1))}
+      break
+    case "last_90_days":
+      range = {start: new Date(new Date().setDate(new Date().getDate() - 90)), end: new Date(new Date().setDate(new Date().getDate() - 1))}
+      break
+    case "last_year":
+      range = {start: startOfYear(new Date(new Date().setFullYear(new Date().getFullYear() - 1))), end: endOfYear(new Date(new Date().setFullYear(new Date().getFullYear() - 1)))}
+      break
+    case "this_year":
+      range = {start: startOfYear(new Date()), end: endOfToday()}
+      break
+    case "this_week":
+      const endOfWeekDay = endOfWeek(today, { weekStartsOn: 1 })
+      range = {
+        start: startOfWeek(today, { weekStartsOn: 1 }),
+        end: compareDesc(endOfWeekDay, today) === -1 ? today : endOfWeekDay
+      };
+      break
+    case "last_week":
+      range = {
+        start: startOfWeek(dayOfLastWeek, { weekStartsOn: 1 }),
+        end: endOfWeek(dayOfLastWeek, { weekStartsOn: 1 })
+      };
+      break
+    case "this_month":
+      range = {
+        start: startOfMonth(today, { weekStartsOn: 1 }),
+        end: today,
+      };
+      break
     default:
       break;
   }
+  return {
+    start: range?.start,
+    end: range?.end,
+  }
 };
+
+export const getCompareDate = (dates) => {
+  const {start, end} = dates
+  let distance = formatDistanceStrict(new Date(start), new Date(end), {unit: 'day'})
+  distance = distance.replace(/\D/g, "")
+  const prevEnd = subDays(new Date(start), 1)
+  const prevStart = subDays(prevEnd, Number(distance))
+  console.log(dates, distance, prevStart, prevEnd, 'prevStart')
+  return {
+    start: prevStart,
+    end: prevEnd
+  }
+}
 
 export const buildAlert = (data) => {
   let revenueBreakdown = data
-    .map((row) => {
-      let result;
-      themeShop.forEach((theme) => {
-        if (theme.name === row[0]) {
-          result = `<${theme.url}|${row[0]}>: ${row[2]}`;
-        }
-      });
-      return result;
+    .map(function (row, index) {
+      return `<${themeChart[index]?.url}|${row[0]}>: ${row[3]}`;
     })
     .join("\n");
   let payload = {
@@ -102,8 +125,9 @@ export const buildAlert = (data) => {
   return payload;
 };
 
-export const sendAlert = (payload) => {
-  console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, "SLACK_WEBHOOK");
+export const sendAlert = (data) => {
+  const payload = buildAlert(data)
+  console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, 'SLACK_WEBHOOK')
   try {
     axios.post(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, JSON.stringify(payload));
   } catch (e) {
