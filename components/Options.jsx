@@ -6,6 +6,7 @@ import {CalendarMinor} from '@shopify/polaris-icons';
 
 const selectOptions = [
 	{label: "This week", value: "this_week"},
+	{label: "Last week", value: "last_week"},
 	{label: "This month", value: "this_month"},
 	{label: "Last 7 days", value: "last_7_days"},
 	{label: "Last 30 days", value: "last_30_days"},
@@ -39,7 +40,7 @@ const Options = ({handleChange}) => {
 	const activator = (
 		<Stack alignment={'center'}>
 			<Button onClick={togglePopoverActive} icon={CalendarMinor}>
-				{selected !== 'custom' ? selectOptions.find(option => option.value === selected)?.label : `${format(selectedDates?.start, 'MM/dd/yyyy')} - {format(selectedDates?.end, 'MM/dd/yyyy')}`}
+				{selected !== 'custom' ? selectOptions.find(option => option.value === selected)?.label : `${format(selectedDates?.start, 'MM/dd/yyyy')} - ${format(selectedDates?.end, 'MM/dd/yyyy')}`}
 			</Button>
 			{compare && (
 				<span>Compare to</span>
