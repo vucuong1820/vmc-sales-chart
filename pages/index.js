@@ -8,7 +8,6 @@ import {getDateRange} from "../helpers/utils";
 import Options from "../components/Options";
 const Home = () => {
   const [selectedDates, setSelectedDates] = useState(getDateRange('this_week'));
-  const [popoverActive, setPopoverActive] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -22,6 +21,10 @@ const Home = () => {
     };
     getData();
   }, []);
+
+  const handleChange = ({selectedDates, compareDates}) => {
+    if (selectedDates) setSelectedDates(selectedDates)
+  }
   return (
     <AppProvider>
       <div style={{padding: '3rem 0'}}>
@@ -35,11 +38,11 @@ const Home = () => {
                   </Stack.Item>
 
                   <Stack.Item>
-                    <Options selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+                    <Options dates={selectedDates} handleChange={handleChange} />
                   </Stack.Item>
                 </Stack>
               </div>
-              <Chart selectedDates={selectedDates} />
+              <Chart selectedDates={selectedDates}  />
               <SaleGrowthChart selectedDates={selectedDates} />
             </Layout.Section>
           </Layout>

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Chart as ChartJS} from 'chart.js/auto';
 import {Line} from "react-chartjs-2";
 import {Card, Layout, Heading, TextContainer, DisplayText, TextStyle, Stack, Icon} from "@shopify/polaris";
-import Options from "./Options";
 import {themeChart} from "../constants/themeChart";
 import {themeShop} from "../constants/themeShop";
 import axios from "axios";

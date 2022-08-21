@@ -15,7 +15,8 @@ const selectOptions = [
 	{label: "Last year", value: "last_year"},
 ];
 
-const Options = ({selectedDates, setSelectedDates }) => {
+const Options = ({dates, handleChange }) => {
+	const [selectedDates, setSelectedDates] = useState(dates)
 	const [compareDates, setCompareDates] = useState(null);
 	const [options, setOptions] = useState(selectOptions)
 	const [compare, setCompare] = useState(false)
@@ -27,10 +28,6 @@ const Options = ({selectedDates, setSelectedDates }) => {
 		year: getYear(new Date())
 	});
 
-	useEffect(() => {
-		// handleChange({selectedDates})
-	}, [])
-
 	const togglePopoverActive = useCallback(
 		() => setPopoverActive((popoverActive) => !popoverActive),
 		[]
@@ -41,21 +38,13 @@ const Options = ({selectedDates, setSelectedDates }) => {
 			<Button onClick={togglePopoverActive} icon={CalendarMinor}>
 				{selected !== 'custom' ? selectOptions.find(option => option.value === selected)?.label : `${format(selectedDates?.start, 'MM/dd/yyyy')} - ${format(selectedDates?.end, 'MM/dd/yyyy')}`}
 			</Button>
-			{compare && (
-				<span>Compare to</span>
-			)}
-			{compare && (
-				<Button onClick={togglePopoverActive} icon={CalendarMinor}>
-					{format(compareDates?.start, 'MM/dd/yyyy')} - {format(compareDates?.end, 'MM/dd/yyyy')}
-				</Button>
-			)}
 		</Stack>
 	);
 
 	const handleChangeSelect = (value) => {
 		setSelected(value);
 		setSelectedDates(getDateRange(value));
-		// handleChange({selectedDates: getDateRange(value), compareDates})
+		handleChange({selectedDates: getDateRange(value), compareDates})
 		togglePopoverActive()
 	};
 	const handleDatePickerChange = (dates) => {
@@ -65,6 +54,12 @@ const Options = ({selectedDates, setSelectedDates }) => {
 		setOptions([...selectOptions, {label: 'Custom', value: 'custom'}])
 		setSelected('custom')
 	}
+
+	const handleMonthChange = useCallback(
+		(month, year) => setDate({month, year}),
+		[],
+	);
+
 
 	return (
 		<Popover
@@ -89,7 +84,7 @@ const Options = ({selectedDates, setSelectedDates }) => {
 									month={month}
 									year={year}
 									onChange={v => handleDatePickerChange(v)}
-									onMonthChange={(month, year) => setDate({month, year})}
+									onMonthChange={handleMonthChange}
 									selected={selectedDates}
 									disableDatesAfter={new Date()}
 									allowRange
@@ -101,7 +96,7 @@ const Options = ({selectedDates, setSelectedDates }) => {
 									month={month}
 									year={year}
 									onChange={dates => setCompareDates(dates)}
-									onMonthChange={(month, year) => setDate({month, year})}
+									onMonthChange={handleMonthChange}
 									selected={compareDates}
 									disableDatesAfter={new Date()}
 									allowRange

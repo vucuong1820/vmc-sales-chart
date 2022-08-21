@@ -13,7 +13,7 @@
     "os": false
   },
   "dependencies": {
-    "@shopify/polaris": "^6.5.0",
+    "@shopify/polaris": "^9.23.1",
     "axios": "^0.25.0",
     "chart.js": "^3.8.0",
     "cheerio": "^1.0.0-rc.10",
