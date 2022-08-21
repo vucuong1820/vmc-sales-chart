@@ -3,7 +3,7 @@ import React from "react";
 const Table = ({rows}) => {
 
   return (
-    <Card.Section title="Sales comparison">
+    <Card.Section>
       <DataTable
         columnContentTypes={["text", "numeric", "numeric", "numeric"]}
         headings={["Name", "All-time sales", "Rating", "Sales"]}

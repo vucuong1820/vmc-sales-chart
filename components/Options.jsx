@@ -15,8 +15,7 @@ const selectOptions = [
 	{label: "Last year", value: "last_year"},
 ];
 
-const Options = ({handleChange}) => {
-	const [selectedDates, setSelectedDates] = useState(getDateRange('this_week'));
+const Options = ({selectedDates, setSelectedDates }) => {
 	const [compareDates, setCompareDates] = useState(null);
 	const [options, setOptions] = useState(selectOptions)
 	const [compare, setCompare] = useState(false)
@@ -29,7 +28,7 @@ const Options = ({handleChange}) => {
 	});
 
 	useEffect(() => {
-		handleChange({selectedDates})
+		// handleChange({selectedDates})
 	}, [])
 
 	const togglePopoverActive = useCallback(
@@ -56,13 +55,13 @@ const Options = ({handleChange}) => {
 	const handleChangeSelect = (value) => {
 		setSelected(value);
 		setSelectedDates(getDateRange(value));
-		handleChange({selectedDates: getDateRange(value), compareDates})
+		// handleChange({selectedDates: getDateRange(value), compareDates})
 		togglePopoverActive()
 	};
 	const handleDatePickerChange = (dates) => {
 		setSelectedDates(dates)
 
-		setCompareDates(getCompareDate(dates))
+		// setCompareDates(getCompareDate(dates))
 		setOptions([...selectOptions, {label: 'Custom', value: 'custom'}])
 		setSelected('custom')
 	}

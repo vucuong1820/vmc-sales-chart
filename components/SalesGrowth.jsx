@@ -13,7 +13,7 @@ import {ArrowUpMinor, ArrowDownMinor} from '@shopify/polaris-icons';
 const minimog = themeShop.find(theme => theme.themeId === 33380968);
 const minimogChart = themeChart.find(theme => theme.label === 'Minimog');
 
-const SaleGrowthChart = () => {
+const SaleGrowthChart = ({selectedDates}) => {
 	const [datasets, setDatasets] = useState([]);
 	const [labels, setLabels] = useState([]);
 	const [totalSales, setTotalSales] = useState(0);
@@ -21,7 +21,13 @@ const SaleGrowthChart = () => {
 	const [rating, setRating] = useState(5.0);
 	let [totalSelectedSales, setTotalSelectedSales] = useState(0);
 
-	const handleChange = async ({selectedDates, compareDates}) => {
+	useEffect(() => {
+		(async () => {
+			if (selectedDates) await handleChange()
+		})();
+	}, [selectedDates])
+
+	const handleChange = async () => {
 		console.log(selectedDates, 'selectedDates');
 		const promises = [];
 		if (selectedDates) {
@@ -83,10 +89,18 @@ const SaleGrowthChart = () => {
 			<Card.Section>
 				<Stack>
 					<Stack.Item fill>
-						<DisplayText>Analytics for Minimog</DisplayText>
-						<div style={{marginTop: '1.5rem'}}>
-							<Options handleChange={handleChange}/>
-						</div>
+						<TextContainer>
+							<Heading>Sales growth through time</Heading>
+							<div style={{display: 'flex', alignItems: 'center'}}>
+								<DisplayText>{totalSelectedSales}</DisplayText>
+								{growthRate ? <div style={{paddingLeft: 15, display: 'flex', alignItems: 'center'}}>
+									<Icon color={growthRate > 0 ? 'success' : 'critical'}
+												source={growthRate > 0 ? ArrowUpMinor : ArrowDownMinor}/>
+									<span style={{fontSize: '2rem'}}><TextStyle
+										variation={growthRate > 0 ? 'positive' : 'negative'}>{growthRate.toFixed(2)}%</TextStyle></span>
+								</div> : ''}
+							</div>
+						</TextContainer>
 					</Stack.Item>
 					<Stack.Item>
 						<div style={{paddingRight: 30}}>
@@ -101,20 +115,6 @@ const SaleGrowthChart = () => {
 				</Stack>
 			</Card.Section>
 			<Card.Section>
-				<div style={{paddingBottom: '3rem'}}>
-					<TextContainer>
-						<Heading>Sales growth</Heading>
-						<div style={{display: 'flex', alignItems: 'center'}}>
-							<DisplayText>{totalSelectedSales}</DisplayText>
-							{growthRate ? <div style={{paddingLeft: 15, display: 'flex', alignItems: 'center'}}>
-								<Icon color={growthRate > 0 ? 'success' : 'critical'}
-											source={growthRate > 0 ? ArrowUpMinor : ArrowDownMinor}/>
-								<span style={{fontSize: '2rem'}}><TextStyle
-									variation={growthRate > 0 ? 'positive' : 'negative'}>{growthRate.toFixed(2)}%</TextStyle></span>
-							</div> : ''}
-						</div>
-					</TextContainer>
-				</div>
 				<Line
 					data={{
 						datasets: datasets,

@@ -1,8 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Line} from "react-chartjs-2";
-import Chart from "chart.js/auto";
 import {Card, Stack, Button} from "@shopify/polaris";
-import Options from "./Options";
 import Table from "./Table";
 import {themeChart} from "../constants/themeChart";
 import axios from "axios";
@@ -11,7 +9,7 @@ import {sendAlert} from "../helpers/utils";
 import {themeShop} from "../constants/themeShop";
 import {dataSolving} from "../helpers/dataSolving";
 
-const ChartPreview = () => {
+const ChartPreview = ({selectedDates}) => {
 	const [datasets, setDatasets] = useState([]);
 	const [labels, setLabels] = useState([]);
 	const [rows, setRows] = useState([
@@ -23,7 +21,13 @@ const ChartPreview = () => {
 		["Ella", 0, 0, 0]
 	]);
 
-	const handleChange = async ({selectedDates}) => {
+	useEffect(() => {
+		(async () => {
+			if (selectedDates) await handleChange()
+		})();
+	}, [selectedDates])
+
+	const handleChange = async ({}) => {
 		const result = await fetchData(selectedDates);
 		if (result) {
 			formatData(result.items);
@@ -76,18 +80,11 @@ const ChartPreview = () => {
 
 	return (
 		<Card>
-			<div className={'Polaris-Card__Section'}>
-				<Stack alignment={'center'}>
-					<Stack.Item fill>
-						<Options handleChange={handleChange}/>
-					</Stack.Item>
-					<Stack.Item>
-						<Button onClick={handleClick} plain>Post to Slack</Button>
-					</Stack.Item>
-				</Stack>
-			</div>
+			<Card.Header title="Sales comparison">
+				<Button onClick={handleClick} plain>Post to Slack</Button>
+			</Card.Header>
 			<Table rows={rows}/>
-			<Card.Section title="Sales growth through time">
+			<Card.Section subdued>
 				<Line
 					data={{
 						datasets: datasets,
