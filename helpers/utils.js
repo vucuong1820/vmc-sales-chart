@@ -4,7 +4,7 @@ import {
   endOfWeek, endOfYear, endOfYesterday,
   getDate, compareDesc,
   startOfMonth, startOfToday,
-  startOfWeek, startOfYear, startOfYesterday, formatDistance
+  startOfWeek, startOfYear, startOfYesterday, differenceInDays
 } from "date-fns";
 import { themeChart } from "../constants/themeChart";
 
@@ -66,15 +66,12 @@ export const getDateRange = (date) => {
 
 export const getCompareDate = (dates) => {
   const {start, end} = dates
-  let distance = getDate(end) - getDate(start)
-  // distance = distance.replace(/\D/g, "")
+
+  let distance = differenceInDays(end, start)
   const prevEnd = subDays(new Date(start), 1)
 
-  console.log(start, end, 'dates');
+  const prevStart = subDays(prevEnd, distance)
 
-  const prevStart = subDays(start, Number(distance + 1))
-  console.log(distance, 'distance');
-  console.log(prevStart, prevEnd, 'getCompareDate');
   return {
     start: prevStart,
     end: prevEnd

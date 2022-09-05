@@ -27,7 +27,6 @@ const SaleGrowthChart = ({selectedDates}) => {
 	}, [selectedDates])
 
 	const handleChange = async () => {
-		console.log(selectedDates, 'selectedDates');
 		const promises = [];
 		if (selectedDates) {
 			promises.push(fetchData(selectedDates));
@@ -63,6 +62,7 @@ const SaleGrowthChart = ({selectedDates}) => {
 
 	const fetchPreviousPeriodSales = async (selectedDates) => {
 		const compareDates = getCompareDate(selectedDates);
+		console.log(compareDates, 'compareDates');
 		const result = await fetchData(compareDates);
 		let sales = 0;
 		result?.items?.forEach(item => {
