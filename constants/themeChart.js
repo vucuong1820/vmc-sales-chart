@@ -48,4 +48,11 @@ export const themeChart = [
     tension: 0.3,
     url: "https://themeforest.net/item/gecko-responsive-shopify-theme/21398578",
   },
+  {
+    label: "Unsen",
+    fill: false,
+    borderColor: "#15C39A",
+    tension: 0.3,
+    url: "https://themeforest.net/item/unsen-multipurpose-shopify-theme-os20/39744835",
+  },
 ];

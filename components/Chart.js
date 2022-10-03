@@ -18,7 +18,8 @@ const ChartPreview = ({selectedDates}) => {
 		["Kalles", 0, 0, 0],
 		["Shella", 0, 0, 0],
 		["Gecko", 0, 0, 0],
-		["Ella", 0, 0, 0]
+		["Ella", 0, 0, 0],
+		["Unsen", 0, 0, 0],
 	]);
 
 	useEffect(() => {

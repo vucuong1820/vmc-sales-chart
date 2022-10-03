@@ -51,4 +51,11 @@ export const themeShop = [
     fixedSales: 6666,
     created_at: format(currentDate, "MM/dd/yyyy"),
   },
+  {
+    url: "https://themeforest.net/item/unsen-multipurpose-shopify-theme-os20/39744835",
+    themeId: 39744835,
+    name: "Unsen",
+    fixedSales: 114,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
 ];
