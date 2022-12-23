@@ -34,7 +34,7 @@ const Home = () => {
               <div style={{paddingBottom: '2rem'}}>
                 <Stack>
                   <Stack.Item fill>
-                    <DisplayText>Analytics for Minimog</DisplayText>
+                    <DisplayText>Analytics for {process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 'MinimogWP' : 'Minimog'}</DisplayText>
                   </Stack.Item>
 
                   <Stack.Item>

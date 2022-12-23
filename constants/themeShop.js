@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 const currentDate = utcToZonedTime(new Date(), "Australia/Sydney");
-export const themeShop = [
+export const shopifyThemes = [
   {
     url: "https://themeforest.net/item/minimog-the-high-converting-shopify-theme/33380968",
     themeId: 33380968,
@@ -59,3 +59,71 @@ export const themeShop = [
     created_at: format(currentDate, "MM/dd/yyyy"),
   },
 ];
+
+export const wpThemes = [
+  {
+    url: "https://themeforest.net/item/minimog-the-high-converting-ecommerce-wordpress-theme/36947163",
+    themeId: 36947163,
+    name: "MinimogWP",
+    fixedSales: 2302,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/flatsome-multipurpose-responsive-woocommerce-theme/5484319",
+    themeId: 5484319,
+    name: "Flatsome",
+    fixedSales: 207982,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/woodmart-woocommerce-wordpress-theme/20264492",
+    themeId: 20264492,
+    name: "WoodMart",
+    fixedSales: 52743,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/porto-responsive-wordpress-ecommerce-theme/9207399",
+    themeId: 9207399,
+    name: "Porto",
+    fixedSales: 79056,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/xstore-responsive-woocommerce-theme/15780546",
+    themeId: 15780546,
+    name: "XStore",
+    fixedSales: 34868,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/kalles-versatile-woocommerce-theme/34529223",
+    themeId: 34529223,
+    name: "Kalles",
+    fixedSales: 1015,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/electro-electronics-store-woocommerce-theme/15720624",
+    themeId: 15720624,
+    name: "Electro",
+    fixedSales: 22229,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/rey-multipurpose-woocommerce-theme/24689383",
+    themeId: 24689383,
+    name: "Rey",
+    fixedSales: 6007,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  },
+  {
+    url: "https://themeforest.net/item/savoy-minimalist-ajax-woocommerce-theme/12537825",
+    themeId: 12537825,
+    name: "Savoy",
+    fixedSales: 13667,
+    created_at: format(currentDate, "MM/dd/yyyy"),
+  }
+];
+
+export const themeShop = process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? wpThemes : shopifyThemes;

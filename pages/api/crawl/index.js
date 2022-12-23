@@ -12,8 +12,9 @@ export default async function handler(req, res) {
   const { theme } = req.query;
   const crawlData = async () => {
     try {
+      console.log(theme, 'theme');
       const currentTheme = themeShop.find((item) => item.name === theme);
-      console.log(currentTheme, 'currentTheme')
+      console.log(currentTheme, '==============> currentTheme')
       const { fixedSales, name, themeId, url } = currentTheme;
       let presentSales;
       let review;

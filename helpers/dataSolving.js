@@ -3,7 +3,6 @@ export const dataSolving = (rows, filterData) => {
   const data = filterData?.map((theme) => {
     return theme.items?.reduce(
       (prev, cur) => {
-        console.log(prev[3], cur.sales)
         prev[0] = cur.name;
         prev[1] = (cur.quantity + theme.fixedSales).toLocaleString('en-US');
         prev[2] = cur.review;

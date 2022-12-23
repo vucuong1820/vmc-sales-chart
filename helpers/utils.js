@@ -117,7 +117,7 @@ export const buildAlert = (data) => {
               emoji: true,
             },
             value: "click_me_123",
-            url: "https://chart.minimog.co/",
+            url: process.env.NEXT_PUBLIC_DOMAIN,
           },
         ],
       },
@@ -128,7 +128,6 @@ export const buildAlert = (data) => {
 
 export const sendAlert = (data) => {
   const payload = buildAlert(data)
-  console.log(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, 'SLACK_WEBHOOK')
   try {
     axios.post(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, JSON.stringify(payload));
   } catch (e) {

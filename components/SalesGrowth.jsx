@@ -9,8 +9,11 @@ import {format} from "date-fns";
 import {getCompareDate} from "../helpers/utils";
 import {ArrowUpMinor, ArrowDownMinor} from '@shopify/polaris-icons';
 
-const minimog = themeShop.find(theme => theme.themeId === 33380968);
-const minimogChart = themeChart.find(theme => theme.label === 'Minimog');
+const themeId = process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 36947163 : 33380968;
+const themeName = process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 'MinimogWP' : 'Minimog';
+
+const minimog = themeShop.find(theme => theme.themeId === themeId);
+const minimogChart = themeChart.find(theme => theme.label === themeName);
 
 const SaleGrowthChart = ({selectedDates}) => {
 	const [datasets, setDatasets] = useState([]);
@@ -108,7 +111,7 @@ const SaleGrowthChart = ({selectedDates}) => {
 						</div>
 					</Stack.Item>
 					<Stack.Item>
-						<DisplayText>{totalSales.toLocaleString('en-US')}</DisplayText>
+						<DisplayText>{totalSales?.toLocaleString('en-US')}</DisplayText>
 						<TextStyle variation={"subdued"}>Total sales</TextStyle>
 					</Stack.Item>
 				</Stack>

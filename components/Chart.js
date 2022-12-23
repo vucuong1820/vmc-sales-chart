@@ -12,15 +12,8 @@ import {dataSolving} from "../helpers/dataSolving";
 const ChartPreview = ({selectedDates}) => {
 	const [datasets, setDatasets] = useState([]);
 	const [labels, setLabels] = useState([]);
-	const [rows, setRows] = useState([
-		["Minimog", 0, 0, 0],
-		["Wokiee", 0, 0, 0],
-		["Kalles", 0, 0, 0],
-		["Shella", 0, 0, 0],
-		["Gecko", 0, 0, 0],
-		["Ella", 0, 0, 0],
-		["Unsen", 0, 0, 0],
-	]);
+	const [rows, setRows] = useState(themeChart.map(theme => ([theme.label, 0,0,0])));
+
 
 	useEffect(() => {
 		(async () => {
