@@ -90,7 +90,7 @@ export const buildAlert = (data) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "*[Shopify] Weekly BestSelling Chart Report*",
+          text: "*Weekly Best Selling Chart Report*",
         },
       },
 
