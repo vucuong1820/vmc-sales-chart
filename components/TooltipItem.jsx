@@ -1,5 +1,6 @@
 import { Stack, TextStyle } from '@shopify/polaris';
-import { SquareColorPreview } from '@shopify/polaris-viz';
+import dynamic from 'next/dynamic';
+const SquareColorPreview = dynamic(() => import('@shopify/polaris-viz').then((module) => module.SquareColorPreview), { ssr: false });
 
 function TooltipItem({ data }) {
   return (

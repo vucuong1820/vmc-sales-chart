@@ -2,29 +2,26 @@ import CompareChart from '@components/CompareChart';
 import Options from '@components/Options';
 import SaleGrowthChart from '@components/SalesGrowth';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
-import { themeShop } from '@constants/themeShop';
 import { getDateRange } from '@helpers/utils';
 import { AppProvider, DisplayText, Layout, Page, Stack } from '@shopify/polaris';
-import { PolarisVizProvider } from '@shopify/polaris-viz';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
-import axios from 'axios';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import crawlThemeShops from 'services/crawlThemeShops';
+const PolarisVizProvider = dynamic(() => import('@shopify/polaris-viz').then((module) => module.PolarisVizProvider), { ssr: false });
 
 function Home() {
   const [selectedDates, setSelectedDates] = useState(getDateRange('this_week'));
 
   useEffect(() => {
-    const getData = async () => {
+    (async () => {
       try {
-        themeShop.forEach(async (item) => {
-          await axios.get(`/api/crawl?theme=${item.name}`);
-        });
+        await crawlThemeShops();
       } catch (error) {
         // console.log(error);
       }
-    };
-    getData();
+    })();
   }, []);
 
   const handleChange = ({ selectedDates }) => {

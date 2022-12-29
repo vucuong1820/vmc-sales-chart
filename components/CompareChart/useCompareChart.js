@@ -5,6 +5,7 @@ import { sendAlert } from '@helpers/utils';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
+import getCompareChartData from 'services/getCompareChartData';
 
 export default function useCompareChart({ selectedDates }) {
   const [datasets, setDatasets] = useState([]);
@@ -17,28 +18,27 @@ export default function useCompareChart({ selectedDates }) {
   }, [selectedDates]);
 
   const handleChange = async () => {
-    const result = await fetchData(selectedDates);
-    if (result) {
-      formatData(result.items);
-      let newDatasets = themeShop.map((theme) => {
-        return {
-          name: theme.name,
-          data: result.items
-            .filter((item) => item?.name === theme.name)
-            .map((item) => ({
-              key: item.created_at,
-              value: item?.sales,
-            })),
-          color: theme.color,
-        };
-      });
-      setDatasets(newDatasets);
+    try {
+      const result = await getCompareChartData(selectedDates);
+      if (result) {
+        formatData(result.items);
+        let newDatasets = themeShop.map((theme) => {
+          return {
+            name: theme.name,
+            data: result.items
+              .filter((item) => item?.name === theme.name)
+              .map((item) => ({
+                key: item.created_at,
+                value: item?.sales,
+              })),
+            color: theme.color,
+          };
+        });
+        setDatasets(newDatasets);
+      }
+    } catch (error) {
+      // console.log(error);
     }
-  };
-
-  const fetchData = async (dates) => {
-    const result = await axios.get(`/api/chart?startingDay=${format(dates?.start, 'MM/dd/yyyy')}&endingDay=${format(dates?.end, 'MM/dd/yyyy')}`);
-    return result?.data;
   };
 
   const formatData = (data) => {

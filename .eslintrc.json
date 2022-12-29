@@ -59,7 +59,8 @@
           ["@helpers", "helpers"],
           ["@models", "models"],
           ["@pages", "pages"],
-          ["@utils", "utils"]
+          ["@utils", "utils"],
+          ["@services", "services"],
         ]
       }
     }

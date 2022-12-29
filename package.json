@@ -16,7 +16,7 @@
   "dependencies": {
     "@shopify/polaris": "^9.23.1",
     "@shopify/polaris-icons": "^6.7.0",
-    "@shopify/polaris-viz": "^7.4.5",
+    "@shopify/polaris-viz": "^7.11.1",
     "axios": "^0.25.0",
     "chart.js": "^3.8.0",
     "cheerio": "^1.0.0-rc.10",
@@ -26,10 +26,10 @@
     "express": "^4.17.2",
     "lodash": "^4.17.21",
     "mongoose": "^6.1.7",
-    "next": "12.0.8",
-    "react": "17.0.2",
+    "next": "^13.1.1",
+    "react": "^18.2.0",
     "react-chartjs-2": "^4.0.1",
-    "react-dom": "17.0.2",
+    "react-dom": "^18.2.0",
     "react-icons": "^4.3.1",
     "react-multi-date-picker": "^3.3.0",
     "styled-components": "^5.3.6"

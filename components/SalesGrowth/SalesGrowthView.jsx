@@ -18,8 +18,9 @@ import {
   TextStyle,
 } from '@shopify/polaris';
 import { ArrowDownMinor, ArrowUpMinor, CalendarMinor } from '@shopify/polaris-icons';
-import { LineChart } from '@shopify/polaris-viz';
+const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
 import { Chart as ChartJs, Legend, LinearScale, PointElement, TimeScale, Tooltip } from 'chart.js';
+import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 import ComparedDate from './components/ComparedDate';
 import SelectedDate from './components/SelectedDate';

@@ -4,6 +4,7 @@ import { getCompareDate, getDateRange } from '@helpers/utils';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
+import getGrowthChartData from 'services/getGrowthChartData';
 
 const themeId = process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 36947163 : 33380968;
 
@@ -126,13 +127,12 @@ export default function useSalesGrowth({ dates, mode }) {
 
   const fetchData = async (dates) => {
     if (!dates) return null;
-    const result = await axios.get(
-      `/api/chart?startingDay=${format(dates?.start, 'MM/dd/yyyy')}&endingDay=${format(dates?.end, 'MM/dd/yyyy')}&themeId=${minimog.themeId}`,
-    );
+    const result = await getGrowthChartData(dates, minimog.themeId);
     if (result) {
-      setTotal(mode === CHART_GROWTH_MAPPING.REVIEWS.key ? result.data?.reviewQuantity : result.data?.totalSales);
+      setTotal(mode === CHART_GROWTH_MAPPING.REVIEWS.key ? result?.reviewQuantity : result?.totalSales);
     }
-    return result?.data;
+
+    return result;
   };
 
   const toggleDatePicker = useCallback(() => setDatePickerActive((prev) => !prev), []);

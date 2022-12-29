@@ -16,7 +16,9 @@
       "@pages": ["./pages/index"],
       "@pages/*": ["./pages/*"],
       "@utils": ["./utils/index"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@services": ["./services/index"],
+      "@services/*": ["./services/*"]
     },
     "jsx": "react-jsx"
   },
