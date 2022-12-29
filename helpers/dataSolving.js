@@ -1,7 +1,7 @@
 export const dataSolving = (rows, filterData) => {
   const result = [...rows];
-  const data = filterData?.map((theme) => {
-    return theme.items?.reduce(
+  const data = filterData?.map((theme) =>
+    theme.items?.reduce(
       (prev, cur) => {
         prev[0] = cur.name;
         prev[1] = (cur.quantity + theme.fixedSales).toLocaleString('en-US');
@@ -9,9 +9,9 @@ export const dataSolving = (rows, filterData) => {
         prev[3] += cur.sales;
         return prev;
       },
-      ["", 0, 0, 0]
-    );
-  });
+      ['', 0, 0, 0],
+    ),
+  );
 
   result.map((result) => {
     data?.forEach((item) => {
@@ -23,8 +23,6 @@ export const dataSolving = (rows, filterData) => {
     });
   });
 
-  result.sort((a, b) => {
-    return b[3] - a[3];
-  });
+  result.sort((a, b) => b[3] - a[3]);
   return result;
 };

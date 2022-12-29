@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 const connection = {};
 
 async function dbConnect() {
@@ -10,6 +11,8 @@ async function dbConnect() {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  mongoose.set('debug', true);
 
   connection.isConnected = db.connections[0].readyState;
 }

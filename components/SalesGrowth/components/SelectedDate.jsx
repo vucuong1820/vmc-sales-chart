@@ -1,0 +1,46 @@
+import { DatePicker, Stack, TextField } from '@shopify/polaris';
+import { format, getMonth, getYear } from 'date-fns';
+import { useCallback, useState } from 'react';
+import styled from 'styled-components';
+import { selectOptions } from '../useSalesGrowth';
+
+const DateWrapper = styled.div`
+  padding-right: 20px;
+  .Polaris-Stack > .Polaris-Stack__Item:first-child {
+    width: 100%;
+  }
+`;
+
+function SelectedDate({ onChangeDate, dates, onChangeOptions, onSetSelected }) {
+  const [{ month, year }, setDate] = useState({ month: getMonth(new Date()), year: getYear(new Date()) });
+  const handleMonthChange = useCallback((month, year) => setDate({ month, year }), []);
+
+  const handleChangeDate = (newDate) => {
+    onChangeDate(newDate);
+    onChangeOptions(() => [...selectOptions, { label: 'Custom', value: 'custom' }]);
+    onSetSelected('custom');
+  };
+
+  return (
+    <DateWrapper>
+      <Stack>
+        <Stack.Item>
+          <TextField fullWidth label="Selected" value={`${format(dates?.start, 'MM/dd/yyyy')} - ${format(dates?.end, 'MM/dd/yyyy')}`} />
+        </Stack.Item>
+        <Stack.Item>
+          <DatePicker
+            month={month}
+            year={year}
+            onChange={handleChangeDate}
+            onMonthChange={handleMonthChange}
+            selected={dates}
+            disableDatesAfter={new Date()}
+            allowRange
+          />
+        </Stack.Item>
+      </Stack>
+    </DateWrapper>
+  );
+}
+
+export default SelectedDate;
