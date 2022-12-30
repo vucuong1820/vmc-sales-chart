@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 
 export const DateWrapper = styled.div`
-  width: 750px;
+  display: flex;
+  width: ${({ expand }) => (expand ? '800px' : '400px')};
+  gap: 3rem;
+  .compare-date {
+    display: flex;
+    align-items: flex-end;
+  }
 `;
 
 export const HeadingWrapper = styled.div`

@@ -1,5 +1,6 @@
 import { TooltipContainer } from '@components/charts.styles';
-import Loading from '@components/Loading';
+import Skeleton from '@components/layout/Skeleton';
+import Loading from '@components/layout/Loading';
 import TooltipItem from '@components/TooltipItem';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
 import {
@@ -8,11 +9,11 @@ import {
   Checkbox,
   DisplayText,
   FormLayout,
-  Grid,
   Heading,
   Icon,
   Popover,
   Select,
+  SkeletonThumbnail,
   Stack,
   TextContainer,
   TextStyle,
@@ -25,44 +26,48 @@ import { useMemo } from 'react';
 import ComparedDate from './components/ComparedDate';
 import SelectedDate from './components/SelectedDate';
 import { DateWrapper } from './salesGrowth.styles';
-import useSalesGrowth from './useSalesGrowth';
+import useSalesGrowth, { FIXED_REVIEW_VALUE, selectOptions } from './useSalesGrowth';
+import { format } from 'date-fns';
 
 ChartJs.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
 
 function SaleGrowthChart({ dates, mode = CHART_GROWTH_MAPPING.SALES.key }) {
   const {
-    loading,
+    setCompare,
     compare,
     handleChangeSelect,
     options,
     selected,
-    defaultDatasets,
     handleConfirm,
-    selectedDates,
-    comparedDates,
-    setSelectedDates,
-    setComparedDates,
+    selectedDate,
+    comparedDate,
+    setSelectedDate,
+    setComparedDate,
     datePickerActive,
     toggleDatePicker,
-    datasets,
     total,
     growthRate,
     rating,
     totalSelectedQty,
     setSelected,
     setOptions,
-    setCompare,
+    loading,
+    datasets,
   } = useSalesGrowth({ dates, mode });
+
+  console.log(loading, datasets);
+
   const activator = (
     <Button icon={CalendarMinor} onClick={toggleDatePicker}>
-      <div style={{ textTransform: 'capitalize' }}>{options.find((x) => x.value === selected)?.label}</div>
+      <div style={{ textTransform: 'capitalize' }}>{selectOptions.find((x) => x.value === selected)?.label ?? `${format(selectedDate?.start, 'MM/dd/yyyy')} - ${format(selectedDate?.end, 'MM/dd/yyyy')}`}</div>
     </Button>
   );
 
   const fixedValue = useMemo(() => {
-    const smallest = Math.min(...(defaultDatasets?.[0]?.data?.map((item) => item.originValue) ?? []));
+    if (compare && mode === CHART_GROWTH_MAPPING.REVIEWS.key) return FIXED_REVIEW_VALUE;
+    const smallest = Math.min(...(datasets?.[0]?.data?.map((item) => item.originValue) ?? []));
     return smallest - (smallest % 10);
-  }, [defaultDatasets]);
+  }, [datasets]);
 
   const renderTooltip = (data) => {
     const activeIndex = data?.activeIndex;
@@ -104,97 +109,89 @@ function SaleGrowthChart({ dates, mode = CHART_GROWTH_MAPPING.SALES.key }) {
         <Stack>
           <Stack.Item fill>
             <TextContainer>
-              <Stack vertical>
+              <Stack alignment="center">
                 <Stack.Item>
                   <Heading>{CHART_GROWTH_MAPPING[mode].title}</Heading>
                 </Stack.Item>
-                <Stack.Item>
-                  <Stack alignment="center">
-                    <Stack.Item>
-                      <Checkbox checked={compare} onChange={(newValue) => setCompare(newValue)} label="Compare with custom period" />
-                    </Stack.Item>
-                    {compare && (
-                      <Stack.Item>
-                        <Popover active={datePickerActive} activator={activator} onClose={toggleDatePicker} fluidContent fullHeight>
-                          <Popover.Pane>
-                            <Popover.Section>
-                              <DateWrapper>
-                                <div style={{ marginBottom: 'var(--p-space-6)' }}>
-                                  <Select options={options} value={selected} onChange={handleChangeSelect} label="Date range" />
-                                </div>
-                                <Grid columns={{ xl: 2, lg: 2, md: 2, sm: 3 }} gap={{ xl: '50px', lg: '50px', md: '50px', sm: '50px' }}>
-                                  <Grid.Cell>
-                                    <ComparedDate onChangeDate={setComparedDates} dates={comparedDates} />
-                                  </Grid.Cell>
-                                  <Grid.Cell>
-                                    <SelectedDate
-                                      onChangeDate={setSelectedDates}
-                                      dates={selectedDates}
-                                      onChangeOptions={setOptions}
-                                      onSetSelected={setSelected}
-                                    />
-                                  </Grid.Cell>
-                                </Grid>
-                              </DateWrapper>
-                            </Popover.Section>
-                          </Popover.Pane>
-
-                          <Popover.Pane fixed>
-                            <Popover.Section>
-                              <Stack>
-                                <Stack.Item fill>
-                                  <Button onClick={toggleDatePicker}>Cancel</Button>
-                                </Stack.Item>
-                                <Button
-                                  primary
-                                  onClick={() => {
-                                    handleConfirm();
-                                    // handleChange();
-                                    toggleDatePicker();
-                                  }}
-                                >
-                                  Apply
-                                </Button>
-                              </Stack>
-                            </Popover.Section>
-                          </Popover.Pane>
-                        </Popover>
-                      </Stack.Item>
-                    )}
-                  </Stack>
-                </Stack.Item>
               </Stack>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <DisplayText>{totalSelectedQty}</DisplayText>
-                {growthRate ? (
-                  <div
-                    style={{
-                      paddingLeft: 15,
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Icon color={growthRate > 0 ? 'success' : 'critical'} source={growthRate > 0 ? ArrowUpMinor : ArrowDownMinor} />
-                    <span style={{ fontSize: '2rem' }}>
-                      <TextStyle variation={growthRate > 0 ? 'positive' : 'negative'}>{growthRate.toFixed(2)}%</TextStyle>
-                    </span>
-                  </div>
-                ) : (
-                  ''
-                )}
-              </div>
+              <Popover active={datePickerActive} activator={activator} onClose={toggleDatePicker} fluidContent fullHeight>
+                <Popover.Pane>
+                  <Popover.Section>
+                    <DateWrapper expand={compare}>
+                      <FormLayout>
+                        <Select options={options} value={selected} onChange={handleChangeSelect} label="Date range" />
+                        <Checkbox checked={compare} onChange={setCompare} label="Compare with custom period" />
+                        <SelectedDate onChangeDate={setSelectedDate} dates={selectedDate} onChangeOptions={setOptions} onSetSelected={setSelected} />
+                      </FormLayout>
+                      {compare && (
+                        <div className="compare-date">
+                          <ComparedDate onChangeDate={setComparedDate} dates={comparedDate} />
+                        </div>
+                      )}
+                    </DateWrapper>
+                  </Popover.Section>
+                </Popover.Pane>
+
+                <Popover.Pane fixed>
+                  <Popover.Section>
+                    <Stack>
+                      <Stack.Item fill>
+                        <Button onClick={toggleDatePicker}>Cancel</Button>
+                      </Stack.Item>
+                      <Button
+                        primary
+                        onClick={() => {
+                          handleConfirm();
+                          // handleChange();
+                          toggleDatePicker();
+                        }}
+                      >
+                        Apply
+                      </Button>
+                    </Stack>
+                  </Popover.Section>
+                </Popover.Pane>
+              </Popover>
             </TextContainer>
           </Stack.Item>
-          <Stack.Item>
-            <div style={{ paddingRight: 30 }}>
-              <DisplayText>{rating}</DisplayText>
-              <TextStyle variation="subdued">Rating</TextStyle>
-            </div>
-          </Stack.Item>
-          <Stack.Item>
-            <DisplayText>{total?.toLocaleString('en-US')}</DisplayText>
-            <TextStyle variation="subdued">{CHART_GROWTH_MAPPING[mode].total}</TextStyle>
-          </Stack.Item>
+          {loading ? (
+            <Skeleton width={300} height={50} />
+          ) : (
+            <Stack>
+              <Stack.Item>
+                <div style={{ display: 'flex', alignItems: 'center', paddingRight: '20px' }}>
+                  <DisplayText>{totalSelectedQty}</DisplayText>
+
+                  {growthRate ? (
+                    <div
+                      style={{
+                        paddingLeft: 15,
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Icon color={growthRate > 0 ? 'success' : 'critical'} source={growthRate > 0 ? ArrowUpMinor : ArrowDownMinor} />
+                      <span style={{ fontSize: '2rem' }}>
+                        <TextStyle variation={growthRate > 0 ? 'positive' : 'negative'}>{growthRate.toFixed(2)}%</TextStyle>
+                      </span>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              </Stack.Item>
+              <Stack.Item>
+                <div style={{ paddingRight: 30 }}>
+                  <DisplayText>{rating}</DisplayText>
+                  <TextStyle variation="subdued">Rating</TextStyle>
+                </div>
+              </Stack.Item>
+              <Stack.Item>
+                {loading ? <SkeletonThumbnail size="small" /> : <DisplayText>{total?.toLocaleString('en-US')}</DisplayText>}
+                <TextStyle variation="subdued">{CHART_GROWTH_MAPPING[mode].total}</TextStyle>
+              </Stack.Item>
+            </Stack>
+          )}
         </Stack>
       </Card.Section>
       <Card.Section>
@@ -206,21 +203,28 @@ function SaleGrowthChart({ dates, mode = CHART_GROWTH_MAPPING.SALES.key }) {
         >
           {loading && <Loading.Center size="large" />}
 
-          <LineChart
-            data={compare ? datasets : defaultDatasets}
-            isAnimated
-            skipLinkText="Skip chart content"
-            theme="Light"
-            tooltipOptions={{
-              renderTooltipContent: renderTooltip,
-            }}
-            yAxisOptions={{
-              labelFormatter: (value) => {
-                if (compare) return value?.toString() ?? '';
-                return (value + fixedValue)?.toString() ?? '';
-              },
-            }}
-          />
+          {!loading && datasets?.length > 0 && (
+            <LineChart
+              data={datasets}
+              isAnimated
+              skipLinkText="Skip chart content"
+              theme="Light"
+              tooltipOptions={{
+                renderTooltipContent: renderTooltip,
+              }}
+              yAxisOptions={{
+                labelFormatter: (value) => {
+                  if (compare && mode === CHART_GROWTH_MAPPING.REVIEWS.key) {
+                    const newValue = value - fixedValue;
+                    const condition = Number.isInteger(newValue) && newValue >= 0;
+                    return condition ? newValue?.toString() ?? '' : '';
+                  }
+                  if (compare) return value?.toString() ?? '';
+                  return (value + fixedValue)?.toString() ?? '';
+                },
+              }}
+            />
+          )}
         </div>
       </Card.Section>
     </Card>

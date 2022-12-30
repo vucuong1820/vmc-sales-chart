@@ -12,8 +12,6 @@ import crawlThemeShops from 'services/crawlThemeShops';
 const PolarisVizProvider = dynamic(() => import('@shopify/polaris-viz').then((module) => module.PolarisVizProvider), { ssr: false });
 
 function Home() {
-  const [selectedDates, setSelectedDates] = useState(getDateRange('this_week'));
-
   useEffect(() => {
     (async () => {
       try {
@@ -24,9 +22,6 @@ function Home() {
     })();
   }, []);
 
-  const handleChange = ({ selectedDates }) => {
-    if (selectedDates) setSelectedDates(selectedDates);
-  };
   return (
     <AppProvider i18n={en}>
       <PolarisVizProvider>
@@ -42,15 +37,11 @@ function Home() {
                         {process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 'MinimogWP' : 'Minimog'}
                       </DisplayText>
                     </Stack.Item>
-
-                    <Stack.Item>
-                      <Options dates={selectedDates} handleChange={handleChange} />
-                    </Stack.Item>
                   </Stack>
                 </div>
-                <CompareChart selectedDates={selectedDates} />
-                <SaleGrowthChart dates={selectedDates} mode={CHART_GROWTH_MAPPING.SALES.key} />
-                <SaleGrowthChart dates={selectedDates} mode={CHART_GROWTH_MAPPING.REVIEWS.key} />
+                <CompareChart />
+                <SaleGrowthChart mode={CHART_GROWTH_MAPPING.SALES.key} />
+                <SaleGrowthChart mode={CHART_GROWTH_MAPPING.REVIEWS.key} />
               </Layout.Section>
             </Layout>
           </Page>

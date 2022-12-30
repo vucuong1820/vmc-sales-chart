@@ -1,25 +1,30 @@
 import { themeChart } from '@constants/themeChart';
 import { themeShop } from '@constants/themeShop';
 import { dataSolving } from '@helpers/dataSolving';
-import { sendAlert } from '@helpers/utils';
-import axios from 'axios';
-import { format } from 'date-fns';
+import { getDateRange, sendAlert } from '@helpers/utils';
 import { useEffect, useState } from 'react';
 import getCompareChartData from 'services/getCompareChartData';
 
-export default function useCompareChart({ selectedDates }) {
+export default function useCompareChart() {
   const [datasets, setDatasets] = useState([]);
   const [rows, setRows] = useState(themeChart.map((theme) => [theme.label, 0, 0, 0]));
+  const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
+
+  const handleChangeDate = ({ newSelectedDate }) => {
+    if (newSelectedDate) setSelectedDate(newSelectedDate);
+  };
 
   useEffect(() => {
     (async () => {
-      if (selectedDates) await handleChange();
+      if (selectedDate) await handleChange();
     })();
-  }, [selectedDates]);
+  }, [selectedDate]);
 
   const handleChange = async () => {
     try {
-      const result = await getCompareChartData(selectedDates);
+      setLoading(true);
+      const result = await getCompareChartData(selectedDate);
       if (result) {
         formatData(result.items);
         let newDatasets = themeShop.map((theme) => {
@@ -36,7 +41,9 @@ export default function useCompareChart({ selectedDates }) {
         });
         setDatasets(newDatasets);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       // console.log(error);
     }
   };
@@ -58,6 +65,9 @@ export default function useCompareChart({ selectedDates }) {
     sendAlert(rows);
   };
   return {
+    handleChangeDate,
+    selectedDate,
+    loading,
     handleClick,
     rows,
     datasets,

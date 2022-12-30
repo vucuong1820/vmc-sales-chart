@@ -43,7 +43,7 @@ function Options({ dates, handleChange }) {
   const handleChangeSelect = (value) => {
     setSelected(value);
     setSelectedDates(getDateRange(value));
-    handleChange({ selectedDates: getDateRange(value), compareDates });
+    handleChange({ newSelectedDate: getDateRange(value), compareDates });
     togglePopoverActive();
   };
   const handleDatePickerChange = (dates) => {
@@ -88,12 +88,16 @@ function Options({ dates, handleChange }) {
                 />
               )}
             </div>
-            {/* <div style={{paddingTop: 30}}> */}
-            {/*	<Checkbox checked={compare} onChange={v => { */}
-            {/*		setCompare(v); */}
-            {/*		setCompareDates(v ? getCompareDate(selectedDates) : null) */}
-            {/*	}} label={'Add comparisons data'} /> */}
-            {/* </div> */}
+            {/* <div style={{ paddingTop: 30 }}>
+              <Checkbox
+                checked={compare}
+                onChange={(v) => {
+                  setCompare(v);
+                  setCompareDates(v ? getCompareDate(selectedDates) : null);
+                }}
+                label={'Add comparisons data'}
+              />
+            </div> */}
           </Card.Section>
           <Card.Section>
             <Stack>
@@ -103,7 +107,7 @@ function Options({ dates, handleChange }) {
               <Button
                 primary
                 onClick={() => {
-                  handleChange({ selectedDates, compareDates });
+                  handleChange({ newSelectedDate: selectedDates, compareDates });
                   togglePopoverActive();
                 }}
               >

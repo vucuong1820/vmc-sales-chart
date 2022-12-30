@@ -1,7 +1,9 @@
 import { TooltipContainer } from '@components/charts.styles';
+import Loading from '@components/layout/Loading';
+import Options from '@components/Options';
 import Table from '@components/Table';
 import TooltipItem from '@components/TooltipItem';
-import { Button, Card, FormLayout, Heading, Stack } from '@shopify/polaris';
+import { Button, Card, FormLayout, Heading, Stack, TextStyle } from '@shopify/polaris';
 const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
 import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import { cloneDeep } from 'lodash';
@@ -10,8 +12,8 @@ import useCompareChart from './useCompareChart';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function CompareChart({ selectedDates }) {
-  const { handleClick, rows, datasets } = useCompareChart({ selectedDates });
+function CompareChart() {
+  const { handleChangeDate, selectedDate, handleClick, loading, rows, datasets } = useCompareChart();
 
   const renderTooltip = (data) => {
     const sortedData = cloneDeep(data.data[0].data.sort((a, b) => b.value - a.value));
@@ -31,22 +33,36 @@ function CompareChart({ selectedDates }) {
 
   return (
     <Card>
-      <Card.Header title="Sales comparison">
+      <Card.Header
+        title={
+          <Stack vertical>
+            <Stack.Item>
+              <Heading variation="strong">Sales comparison</Heading>
+            </Stack.Item>
+            <Stack.Item>
+              <Options dates={selectedDate} handleChange={handleChangeDate} />
+            </Stack.Item>
+          </Stack>
+        }
+      >
         <Button onClick={handleClick} plain>
           Post to Slack
         </Button>
       </Card.Header>
-      <Table rows={rows} />
+      <Table rows={rows} loading={loading} />
       <Card.Section subdued>
-        <div style={{ height: '500px' }}>
-          <LineChart
-            data={datasets}
-            isAnimated
-            theme="Light"
-            tooltipOptions={{
-              renderTooltipContent: renderTooltip,
-            }}
-          />
+        <div style={{ height: '500px', position: 'relative' }}>
+          {loading && <Loading.Center size="large" />}
+          {!loading && datasets?.length > 0 && (
+            <LineChart
+              data={datasets}
+              isAnimated
+              theme="Light"
+              tooltipOptions={{
+                renderTooltipContent: renderTooltip,
+              }}
+            />
+          )}
         </div>
       </Card.Section>
     </Card>

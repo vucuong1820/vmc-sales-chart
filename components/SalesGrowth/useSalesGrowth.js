@@ -1,8 +1,6 @@
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
 import { themeShop } from '@constants/themeShop';
 import { getCompareDate, getDateRange } from '@helpers/utils';
-import axios from 'axios';
-import { format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import getGrowthChartData from 'services/getGrowthChartData';
 
@@ -20,110 +18,55 @@ export const selectOptions = [
   { label: 'Last year', value: 'last_year' },
 ];
 
-export default function useSalesGrowth({ dates, mode }) {
-  const [datasets, setDatasets] = useState([]);
+export const FIXED_REVIEW_VALUE = 1;
+
+export default function useSalesGrowth({ mode }) {
   const [total, setTotal] = useState(0);
-  const [growthRate, setGrowthRate] = useState({});
+  const [growthRate, setGrowthRate] = useState();
   const [rating, setRating] = useState(5.0);
   const [totalSelectedQty, setTotalSelectedQty] = useState(0);
   const [datePickerActive, setDatePickerActive] = useState(false);
-  const [selectedDates, setSelectedDates] = useState(getDateRange('this_week'));
-  const [comparedDates, setComparedDates] = useState(getCompareDate(getDateRange('this_week')));
-  const [defaultDatasets, setDefaultDatasets] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
+  const [comparedDate, setComparedDate] = useState(getCompareDate(getDateRange('this_week')));
   const [selected, setSelected] = useState('this_week');
   const [options, setOptions] = useState(selectOptions);
   const [compare, setCompare] = useState(false);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    (async () => {
-      if (dates) {
-        setLoading(true);
-
-        const data = await fetchData(dates);
-        let newDefaultDatasets = [];
-        const smallestNumber = Math.min(
-          ...data.items.map((item) =>
-            mode === CHART_GROWTH_MAPPING.REVIEWS.key ? (item?.reviewQuantity ?? 0) + minimog?.fixedReviews : item.quantity + minimog.fixedSales,
-          ),
-        );
-        const fixedValue = smallestNumber - (smallestNumber % 10);
-        newDefaultDatasets.push({
-          data: data.items.map((item) => {
-            const originValue =
-              mode === CHART_GROWTH_MAPPING.REVIEWS.key ? (item?.reviewQuantity ?? 0) + minimog?.fixedReviews : item.quantity + minimog.fixedSales;
-            return {
-              key: item.created_at,
-              value: originValue - fixedValue,
-              originValue,
-            };
-          }),
-          name: 'Selected',
-          color: minimog.color,
-        });
-        setDefaultDatasets(newDefaultDatasets);
-
-        let newTotalSelectedQty = 0;
-        data?.items?.forEach((item) => {
-          newTotalSelectedQty += mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item.sales;
-          setRating(item.review);
-        });
-        setTotalSelectedQty(newTotalSelectedQty);
-        await fetchPreviousPeriodQty({ dates, total: newTotalSelectedQty });
-        setLoading(false);
-      }
-    })();
-  }, [dates]);
-
-  useEffect(() => {
-    setComparedDates(getCompareDate(selectedDates));
-  }, [selectedDates]);
+  const [datasets, setDatasets] = useState([]);
 
   useEffect(() => {
     (async () => {
-      if (selectedDates) {
+      if (selectedDate) {
         setLoading(true);
-        await handleChange({ dateSelected: selectedDates, dateCompared: comparedDates });
+        await getDatasets({ dateSelected: selectedDate, dateCompared: comparedDate, compare });
         setLoading(false);
       }
     })();
   }, []);
 
-  const handleChange = async ({ dateSelected, dateCompared }) => {
-    const [selectedData, comparedData] = await Promise.all([fetchData(dateSelected), fetchData(dateCompared)]);
+  useEffect(() => {
+    setComparedDate(getCompareDate(selectedDate));
+  }, [selectedDate]);
 
-    let newTotalSelectedQty = 0;
-    selectedData?.items?.forEach((item) => {
-      newTotalSelectedQty += mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item.sales;
-      setRating(item.review);
-    });
-    setTotalSelectedQty(newTotalSelectedQty);
+  const toggleDatePicker = useCallback(() => setDatePickerActive((prev) => !prev), []);
 
-    let comparedQty = 0;
-    comparedData?.items?.slice(0, selectedData?.items?.length)?.forEach((item) => {
-      comparedQty += mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item?.sales;
-    });
-
-    const rate = ((newTotalSelectedQty - comparedQty) / (comparedQty || 1)) * 100;
-    setGrowthRate((prev) => ({ ...prev, custom: rate }));
-
-    let newDatasets = [];
-    for (let index = 0; index < [selectedData, comparedData].length; index++) {
-      const data = [selectedData, comparedData][index];
-      if (!data) continue;
-      const dataItems = data?.items?.slice(0, selectedData?.items?.length) ?? [];
-      const dataList = dataItems?.map((item) => ({
-        key: item?.created_at,
-        value: mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item?.sales,
-      }));
-      newDatasets.push({
-        data: dataList,
-        name: index === 0 ? 'Selected' : 'Compared',
-        isComparison: index === 1,
-        color: minimog.color,
+  const getTotalSalesOrReviewsPerDay = useCallback(
+    (items) => {
+      let quantity = 0;
+      items.forEach((item) => {
+        quantity += mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item.sales;
       });
-    }
-    setDatasets(newDatasets);
-  };
+      return quantity;
+    },
+    [mode],
+  );
+
+  const getTotalSalesOrReviewsAllTime = useCallback(
+    (item) => {
+      return mode === CHART_GROWTH_MAPPING.REVIEWS.key ? (item?.reviewQuantity ?? 0) + minimog?.fixedReviews : item.quantity + minimog.fixedSales;
+    },
+    [mode],
+  );
 
   const fetchData = async (dates) => {
     if (!dates) return null;
@@ -131,57 +74,113 @@ export default function useSalesGrowth({ dates, mode }) {
     if (result) {
       setTotal(mode === CHART_GROWTH_MAPPING.REVIEWS.key ? result?.reviewQuantity : result?.totalSales);
     }
-
     return result;
   };
 
-  const toggleDatePicker = useCallback(() => setDatePickerActive((prev) => !prev), []);
-
   const handleConfirm = async () => {
     setLoading(true);
-    await handleChange({ dateSelected: selectedDates, dateCompared: comparedDates });
+    await getDatasets({ dateSelected: selectedDate, dateCompared: comparedDate, compare });
     setLoading(false);
-  };
-
-  const fetchPreviousPeriodQty = async ({ dates, total }) => {
-    const prevDates = getCompareDate(dates);
-    const result = await fetchData(prevDates);
-    let qty = 0;
-    result?.items?.forEach((item) => {
-      qty += mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item?.sales;
-    });
-
-    const rate = ((total - qty) / (qty || 1)) * 100;
-    setGrowthRate((prev) => ({ ...prev, default: rate }));
   };
 
   const handleChangeSelect = (value) => {
     setOptions((prev) => prev.filter((opt) => opt.value !== 'custom'));
     setSelected(value);
-    setSelectedDates(getDateRange(value));
+    setSelectedDate(getDateRange(value));
   };
 
+  const getDatasets = async ({ dateSelected, dateCompared, compare }) => {
+    const [selectedData, comparedData] = await Promise.all([fetchData(dateSelected), fetchData(dateCompared)]);
+    setRating(selectedData.items[selectedData.items.length - 1].review);
+    let result = [];
+    const selectedQty = getTotalSalesOrReviewsPerDay(selectedData.items);
+    const comparedQty = getTotalSalesOrReviewsPerDay(comparedData.items);
+    const listData = [selectedData, comparedData].filter((x) => x);
+    if (!compare) {
+      const data = listData[0];
+
+      const smallestNumber = Math.min(...data.items.map((item) => getTotalSalesOrReviewsAllTime(item)));
+      const fixedValue = smallestNumber - (smallestNumber % 10);
+
+      const dataList = data.items.map((item) => {
+        const originValue = getTotalSalesOrReviewsAllTime(item);
+
+        return {
+          key: item.created_at,
+          value: originValue - fixedValue,
+          originValue,
+        };
+      });
+
+      result.push({
+        data: dataList,
+        name: 'Selected',
+        color: minimog.color,
+      });
+    } else {
+      for (let index = 0; index < listData.length; index++) {
+        const data = listData[index];
+
+        const dataList = data?.items?.map((item) => {
+          const originValue = mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item?.sales;
+          return {
+            key: item?.created_at,
+            value: mode === CHART_GROWTH_MAPPING.REVIEWS.key ? originValue + FIXED_REVIEW_VALUE : originValue,
+            originValue,
+          };
+        });
+
+        result.push({
+          data: dataList,
+          name: index === 0 ? 'Selected' : 'Compared',
+          isComparison: index === 1,
+          color: minimog.color,
+        });
+      }
+    }
+
+    setTotalSelectedQty(selectedQty);
+
+    const rate = ((selectedQty - comparedQty) / (comparedQty || 1)) * 100;
+    setGrowthRate(rate);
+
+    const newSelectedDatasets = result?.[0] ?? {};
+    let newComparedDatasets = result?.[1];
+    if (!newComparedDatasets) {
+      setDatasets(result);
+      return;
+    }
+    newComparedDatasets = {
+      ...newComparedDatasets,
+      data: newComparedDatasets.data.slice(0, newSelectedDatasets?.data?.length),
+    };
+
+    setDatasets([newSelectedDatasets, newComparedDatasets]);
+  };
+
+  console.log(datasets);
+
   return {
+    growthRate,
     compare,
     handleChangeSelect,
     options,
     selected,
-    defaultDatasets,
     handleConfirm,
-    selectedDates,
-    comparedDates,
-    setSelectedDates,
-    setComparedDates,
+    selectedDate,
+    comparedDate,
+    setSelectedDate,
+    setComparedDate,
     datePickerActive,
     toggleDatePicker,
-    datasets,
     total,
-    growthRate: compare ? growthRate?.custom : growthRate?.default,
     rating,
     totalSelectedQty,
     setSelected,
     setOptions,
     setCompare,
     loading,
+    setCompare,
+    datasets,
   };
 }
