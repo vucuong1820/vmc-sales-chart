@@ -8,7 +8,6 @@ dbConnect();
 
 export default async function handler(req, res) {
   const { startingDay, endingDay, themeId } = req.query;
-  console.log({ startingDay, endingDay, themeId });
   let presentSales;
   let reviewQuantity;
   const filters = {

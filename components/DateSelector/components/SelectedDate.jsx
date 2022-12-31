@@ -1,6 +1,6 @@
 import { DatePicker, Stack, TextField } from '@shopify/polaris';
 import { format, getMonth, getYear } from 'date-fns';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { DATE_OPTIONS } from '../useDateSelector';
 
