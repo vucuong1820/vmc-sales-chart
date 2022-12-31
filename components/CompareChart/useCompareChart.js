@@ -1,4 +1,3 @@
-import { themeChart } from '@constants/themeChart';
 import { themeShop } from '@constants/themeShop';
 import { dataSolving } from '@helpers/dataSolving';
 import { getDateRange, sendAlert } from '@helpers/utils';
@@ -7,19 +6,17 @@ import getCompareChartData from 'services/getCompareChartData';
 
 export default function useCompareChart() {
   const [datasets, setDatasets] = useState([]);
-  const [rows, setRows] = useState(themeChart.map((theme) => [theme.label, 0, 0, 0]));
+  const [rows, setRows] = useState(themeShop.map((theme) => [theme.name, 0, 0, 0]));
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
 
-  const handleChangeDate = ({ newSelectedDate }) => {
+  const handleChangeDate = (newSelectedDate) => {
     if (newSelectedDate) setSelectedDate(newSelectedDate);
   };
 
   useEffect(() => {
-    (async () => {
-      if (selectedDate) await handleChange();
-    })();
-  }, [selectedDate]);
+    (async () => await handleChange())();
+  }, []);
 
   const handleChange = async () => {
     try {
@@ -65,6 +62,7 @@ export default function useCompareChart() {
     sendAlert(rows);
   };
   return {
+    handleChange,
     handleChangeDate,
     selectedDate,
     loading,

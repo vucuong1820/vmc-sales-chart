@@ -1,7 +1,7 @@
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
 import { themeShop } from '@constants/themeShop';
 import { getCompareDate, getDateRange } from '@helpers/utils';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import getGrowthChartData from 'services/getGrowthChartData';
 
 const themeId = process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 36947163 : 33380968;
@@ -25,12 +25,8 @@ export default function useSalesGrowth({ mode }) {
   const [growthRate, setGrowthRate] = useState();
   const [rating, setRating] = useState(5.0);
   const [totalSelectedQty, setTotalSelectedQty] = useState(0);
-  const [datePickerActive, setDatePickerActive] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
   const [comparedDate, setComparedDate] = useState(getCompareDate(getDateRange('this_week')));
-  const [selected, setSelected] = useState('this_week');
-  const [options, setOptions] = useState(selectOptions);
-  const [compare, setCompare] = useState(false);
   const [loading, setLoading] = useState(false);
   const [datasets, setDatasets] = useState([]);
 
@@ -47,8 +43,6 @@ export default function useSalesGrowth({ mode }) {
   useEffect(() => {
     setComparedDate(getCompareDate(selectedDate));
   }, [selectedDate]);
-
-  const toggleDatePicker = useCallback(() => setDatePickerActive((prev) => !prev), []);
 
   const getTotalSalesOrReviewsPerDay = useCallback(
     (items) => {
@@ -83,20 +77,14 @@ export default function useSalesGrowth({ mode }) {
     setLoading(false);
   };
 
-  const handleChangeSelect = (value) => {
-    setOptions((prev) => prev.filter((opt) => opt.value !== 'custom'));
-    setSelected(value);
-    setSelectedDate(getDateRange(value));
-  };
-
-  const getDatasets = async ({ dateSelected, dateCompared, compare }) => {
-    const [selectedData, comparedData] = await Promise.all([fetchData(dateSelected), fetchData(dateCompared)]);
+  const getDatasets = async ({ dateSelected, dateCompared }) => {
+    const [selectedData, comparedData] = await Promise.all([fetchData(dateSelected), fetchData(dateCompared || getCompareDate(dateSelected))]);
     setRating(selectedData.items[selectedData.items.length - 1].review);
     let result = [];
     const selectedQty = getTotalSalesOrReviewsPerDay(selectedData.items);
     const comparedQty = getTotalSalesOrReviewsPerDay(comparedData.items);
     const listData = [selectedData, comparedData].filter((x) => x);
-    if (!compare) {
+    if (!dateCompared) {
       const data = listData[0];
 
       const smallestNumber = Math.min(...data.items.map((item) => getTotalSalesOrReviewsAllTime(item)));
@@ -158,29 +146,20 @@ export default function useSalesGrowth({ mode }) {
     setDatasets([newSelectedDatasets, newComparedDatasets]);
   };
 
-  console.log(datasets);
+  const compare = useMemo(() => selectedDate && comparedDate, [selectedDate, comparedDate]);
 
   return {
-    growthRate,
     compare,
-    handleChangeSelect,
-    options,
-    selected,
     handleConfirm,
     selectedDate,
     comparedDate,
     setSelectedDate,
     setComparedDate,
-    datePickerActive,
-    toggleDatePicker,
     total,
+    growthRate,
     rating,
     totalSelectedQty,
-    setSelected,
-    setOptions,
-    setCompare,
     loading,
-    setCompare,
     datasets,
   };
 }

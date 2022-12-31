@@ -1,19 +1,19 @@
 import { TooltipContainer } from '@components/charts.styles';
+import DateSelector from '@components/DateSelector';
 import Loading from '@components/layout/Loading';
-import Options from '@components/Options';
 import Table from '@components/Table';
 import TooltipItem from '@components/TooltipItem';
-import { Button, Card, FormLayout, Heading, Stack, TextStyle } from '@shopify/polaris';
-const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
+import { Button, Card, FormLayout, Heading, Stack } from '@shopify/polaris';
 import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import { cloneDeep } from 'lodash';
 import dynamic from 'next/dynamic';
 import useCompareChart from './useCompareChart';
+const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function CompareChart() {
-  const { handleChangeDate, selectedDate, handleClick, loading, rows, datasets } = useCompareChart();
+  const { handleChange, handleChangeDate, selectedDate, handleClick, loading, rows, datasets } = useCompareChart();
 
   const renderTooltip = (data) => {
     const sortedData = cloneDeep(data.data[0].data.sort((a, b) => b.value - a.value));
@@ -40,7 +40,7 @@ function CompareChart() {
               <Heading variation="strong">Sales comparison</Heading>
             </Stack.Item>
             <Stack.Item>
-              <Options dates={selectedDate} handleChange={handleChangeDate} />
+              <DateSelector onConfirm={handleChange} onlyDefault={true} selectedDate={selectedDate} onChangeSelectedDate={handleChangeDate} />
             </Stack.Item>
           </Stack>
         }

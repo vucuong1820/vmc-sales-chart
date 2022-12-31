@@ -1,20 +1,19 @@
+import { themeShop } from '@constants/themeShop';
 import axios from 'axios';
 import {
-  subDays,
+  compareDesc,
+  differenceInDays,
   endOfToday,
   endOfWeek,
   endOfYear,
   endOfYesterday,
-  getDate,
-  compareDesc,
   startOfMonth,
   startOfToday,
   startOfWeek,
   startOfYear,
   startOfYesterday,
-  differenceInDays,
+  subDays,
 } from 'date-fns';
-import { themeChart } from '@constants/themeChart';
 
 export const getDateRange = (date) => {
   const today = new Date();
@@ -47,13 +46,14 @@ export const getDateRange = (date) => {
     case 'this_year':
       range = { start: startOfYear(new Date()), end: endOfToday() };
       break;
-    case 'this_week':
+    case 'this_week': {
       const endOfWeekDay = endOfWeek(today, { weekStartsOn: 1 });
       range = {
         start: startOfWeek(today, { weekStartsOn: 1 }),
         end: compareDesc(endOfWeekDay, today) === -1 ? today : endOfWeekDay,
       };
       break;
+    }
     case 'last_week':
       range = {
         start: startOfWeek(dayOfLastWeek, { weekStartsOn: 1 }),
@@ -90,7 +90,13 @@ export const getCompareDate = (dates) => {
 };
 
 export const buildAlert = (data) => {
-  const revenueBreakdown = data.map((row, index) => `<${themeChart[index]?.url}|${row[0]}>: ${row[3]}`).join('\n');
+  const revenueBreakdown = data
+    .map((row, index) => {
+      const theme = themeShop[index];
+      const url = `${theme.url}/${theme.themeId}`;
+      return `<${url}|${row[0]}>: ${row[3]}`;
+    })
+    .join('\n');
   const payload = {
     blocks: [
       {
@@ -138,6 +144,7 @@ export const sendAlert = (data) => {
   try {
     axios.post('https://hooks.slack.com/services/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', JSON.stringify(payload));
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log(e);
   }
 };

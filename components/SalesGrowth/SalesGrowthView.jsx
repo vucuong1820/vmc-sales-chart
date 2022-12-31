@@ -1,67 +1,34 @@
 import { TooltipContainer } from '@components/charts.styles';
-import Skeleton from '@components/layout/Skeleton';
+import DateSelector from '@components/DateSelector';
 import Loading from '@components/layout/Loading';
+import Skeleton from '@components/layout/Skeleton';
 import TooltipItem from '@components/TooltipItem';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
-import {
-  Button,
-  Card,
-  Checkbox,
-  DisplayText,
-  FormLayout,
-  Heading,
-  Icon,
-  Popover,
-  Select,
-  SkeletonThumbnail,
-  Stack,
-  TextContainer,
-  TextStyle,
-} from '@shopify/polaris';
-import { ArrowDownMinor, ArrowUpMinor, CalendarMinor } from '@shopify/polaris-icons';
-const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
+import { Card, DisplayText, FormLayout, Heading, Icon, SkeletonThumbnail, Stack, TextContainer, TextStyle } from '@shopify/polaris';
+import { ArrowDownMinor, ArrowUpMinor } from '@shopify/polaris-icons';
 import { Chart as ChartJs, Legend, LinearScale, PointElement, TimeScale, Tooltip } from 'chart.js';
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
-import ComparedDate from './components/ComparedDate';
-import SelectedDate from './components/SelectedDate';
-import { DateWrapper } from './salesGrowth.styles';
-import useSalesGrowth, { FIXED_REVIEW_VALUE, selectOptions } from './useSalesGrowth';
-import { format } from 'date-fns';
+import useSalesGrowth, { FIXED_REVIEW_VALUE } from './useSalesGrowth';
+const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
 
 ChartJs.register(LinearScale, PointElement, Tooltip, Legend, TimeScale);
 
 function SaleGrowthChart({ dates, mode = CHART_GROWTH_MAPPING.SALES.key }) {
   const {
-    setCompare,
     compare,
-    handleChangeSelect,
-    options,
-    selected,
     handleConfirm,
     selectedDate,
     comparedDate,
     setSelectedDate,
     setComparedDate,
-    datePickerActive,
-    toggleDatePicker,
     total,
     growthRate,
     rating,
     totalSelectedQty,
-    setSelected,
-    setOptions,
     loading,
     datasets,
   } = useSalesGrowth({ dates, mode });
-
-  console.log(loading, datasets);
-
-  const activator = (
-    <Button icon={CalendarMinor} onClick={toggleDatePicker}>
-      <div style={{ textTransform: 'capitalize' }}>{selectOptions.find((x) => x.value === selected)?.label ?? `${format(selectedDate?.start, 'MM/dd/yyyy')} - ${format(selectedDate?.end, 'MM/dd/yyyy')}`}</div>
-    </Button>
-  );
 
   const fixedValue = useMemo(() => {
     if (compare && mode === CHART_GROWTH_MAPPING.REVIEWS.key) return FIXED_REVIEW_VALUE;
@@ -114,44 +81,14 @@ function SaleGrowthChart({ dates, mode = CHART_GROWTH_MAPPING.SALES.key }) {
                   <Heading>{CHART_GROWTH_MAPPING[mode].title}</Heading>
                 </Stack.Item>
               </Stack>
-              <Popover active={datePickerActive} activator={activator} onClose={toggleDatePicker} fluidContent fullHeight>
-                <Popover.Pane>
-                  <Popover.Section>
-                    <DateWrapper expand={compare}>
-                      <FormLayout>
-                        <Select options={options} value={selected} onChange={handleChangeSelect} label="Date range" />
-                        <Checkbox checked={compare} onChange={setCompare} label="Compare with custom period" />
-                        <SelectedDate onChangeDate={setSelectedDate} dates={selectedDate} onChangeOptions={setOptions} onSetSelected={setSelected} />
-                      </FormLayout>
-                      {compare && (
-                        <div className="compare-date">
-                          <ComparedDate onChangeDate={setComparedDate} dates={comparedDate} />
-                        </div>
-                      )}
-                    </DateWrapper>
-                  </Popover.Section>
-                </Popover.Pane>
-
-                <Popover.Pane fixed>
-                  <Popover.Section>
-                    <Stack>
-                      <Stack.Item fill>
-                        <Button onClick={toggleDatePicker}>Cancel</Button>
-                      </Stack.Item>
-                      <Button
-                        primary
-                        onClick={() => {
-                          handleConfirm();
-                          // handleChange();
-                          toggleDatePicker();
-                        }}
-                      >
-                        Apply
-                      </Button>
-                    </Stack>
-                  </Popover.Section>
-                </Popover.Pane>
-              </Popover>
+              <DateSelector
+                onlyCompare={mode === CHART_GROWTH_MAPPING.REVIEWS.key}
+                onConfirm={handleConfirm}
+                selectedDate={selectedDate}
+                comparedDate={comparedDate}
+                onChangeComparedDate={setComparedDate}
+                onChangeSelectedDate={setSelectedDate}
+              />
             </TextContainer>
           </Stack.Item>
           {loading ? (

@@ -1,13 +1,11 @@
 import CompareChart from '@components/CompareChart';
-import Options from '@components/Options';
 import SaleGrowthChart from '@components/SalesGrowth';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
-import { getDateRange } from '@helpers/utils';
 import { AppProvider, DisplayText, Layout, Page, Stack } from '@shopify/polaris';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import crawlThemeShops from 'services/crawlThemeShops';
 const PolarisVizProvider = dynamic(() => import('@shopify/polaris-viz').then((module) => module.PolarisVizProvider), { ssr: false });
 
@@ -32,9 +30,9 @@ function Home() {
                 <div style={{ paddingBottom: '2rem' }}>
                   <Stack>
                     <Stack.Item fill>
-                      <DisplayText>
+                      <DisplayText element="h1">
                         Analytics for
-                        {process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? 'MinimogWP' : 'Minimog'}
+                        {process.env.NEXT_PUBLIC_PRODUCT === 'minimogwp' ? ' MinimogWP' : ' Minimog'}
                       </DisplayText>
                     </Stack.Item>
                   </Stack>

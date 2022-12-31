@@ -60,7 +60,7 @@
           ["@models", "models"],
           ["@pages", "pages"],
           ["@utils", "utils"],
-          ["@services", "services"],
+          ["@services", "services"]
         ]
       }
     }
