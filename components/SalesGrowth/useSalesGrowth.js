@@ -1,6 +1,7 @@
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
 import { themeShop } from '@constants/themeShop';
 import { getCompareDate, getDateRange } from '@helpers/utils';
+import { format } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import getGrowthChartData from 'services/getGrowthChartData';
 
@@ -55,12 +56,9 @@ export default function useSalesGrowth({ mode }) {
     [mode],
   );
 
-  const getTotalSalesOrReviewsAllTime = useCallback(
-    (item) => {
-      return mode === CHART_GROWTH_MAPPING.REVIEWS.key ? (item?.reviewQuantity ?? 0) + minimog?.fixedReviews : item.quantity + minimog.fixedSales;
-    },
-    [mode],
-  );
+  const getTotalSalesOrReviewsAllTime = (item) => {
+    return mode === CHART_GROWTH_MAPPING.REVIEWS.key ? (item?.reviewQuantity ?? 0) + minimog?.fixedReviews : item.quantity + minimog.fixedSales;
+  };
 
   const fetchData = async (dates) => {
     if (!dates) return null;
@@ -79,7 +77,7 @@ export default function useSalesGrowth({ mode }) {
 
   const getDatasets = async ({ dateSelected, dateCompared }) => {
     const [selectedData, comparedData] = await Promise.all([fetchData(dateSelected), fetchData(dateCompared || getCompareDate(dateSelected))]);
-    setRating(selectedData.items[selectedData.items.length - 1].review);
+    setRating(selectedData.items[selectedData.items.length - 1]?.review);
     let result = [];
     const selectedQty = getTotalSalesOrReviewsPerDay(selectedData.items);
     const comparedQty = getTotalSalesOrReviewsPerDay(comparedData.items);
@@ -94,7 +92,7 @@ export default function useSalesGrowth({ mode }) {
         const originValue = getTotalSalesOrReviewsAllTime(item);
 
         return {
-          key: item.created_at,
+          key: format(new Date(item?.createdAt), 'MM/dd/yyyy'),
           value: originValue - fixedValue,
           originValue,
         };
@@ -112,7 +110,7 @@ export default function useSalesGrowth({ mode }) {
         const dataList = data?.items?.map((item) => {
           const originValue = mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item?.sales;
           return {
-            key: item?.created_at,
+            key: format(new Date(item?.createdAt), 'MM/dd/yyyy'),
             value: mode === CHART_GROWTH_MAPPING.REVIEWS.key ? originValue + FIXED_REVIEW_VALUE : originValue,
             originValue,
           };

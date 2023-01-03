@@ -1,19 +1,29 @@
-import dbConnect from '@utils/dbConnect';
+import { themeShop } from '@constants/themeShop';
+import dbConnect from '@helpers/dbConnect';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { themeShop } from '@constants/themeShop';
 
 dbConnect();
 
 export default async function handler(req, res) {
   const { startingDay, endingDay, themeId } = req.query;
+  // await migrateTimestamp();
   let presentSales;
   let reviewQuantity;
+  const startingDate = new Date(startingDay);
+  startingDate.setUTCHours(0);
+  startingDate.setUTCMinutes(0);
+  startingDate.setUTCSeconds(0);
+  const endingDate = new Date(endingDay);
+  endingDate.setUTCHours(23);
+  endingDate.setUTCMinutes(59);
+  endingDate.setUTCSeconds(59);
+
   const filters = {
-    created_at: {
-      $gte: startingDay,
-      $lte: endingDay,
+    createdAt: {
+      $gte: startingDate,
+      $lte: endingDate,
     },
   };
 

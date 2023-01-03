@@ -1,6 +1,7 @@
 import { themeShop } from '@constants/themeShop';
 import { buildAlert, getDateRange, sendAlert } from '@helpers/utils';
 import Customers from '@models/Customers';
+import { endOfDay, startOfDay } from 'date-fns';
 
 export default async function handler(req, res) {
   try {
@@ -26,9 +27,9 @@ const getData = async () => {
   for (let i = 0; i < themeShop.length; i++) {
     const time = getDateRange('this_week');
     const data = await Customers.find({
-      created_at: {
-        $gte: time.start,
-        $lte: time.end,
+      createdAt: {
+        $gte: startOfDay(new Date(time.start)),
+        $lte: endOfDay(new Date(time.end)),
       },
     });
 

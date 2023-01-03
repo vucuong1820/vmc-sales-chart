@@ -1,6 +1,7 @@
 import { themeShop } from '@constants/themeShop';
 import { dataSolving } from '@helpers/dataSolving';
 import { getDateRange, sendAlert } from '@helpers/utils';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import getCompareChartData from 'services/getCompareChartData';
 
@@ -30,7 +31,7 @@ export default function useCompareChart() {
             data: result.items
               .filter((item) => item?.name === theme.name)
               .map((item) => ({
-                key: item.created_at,
+                key: format(new Date(item?.createdAt), 'MM/dd/yyyy'),
                 value: item?.sales,
               })),
             color: theme.color,

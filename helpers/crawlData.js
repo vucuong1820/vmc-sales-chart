@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-escape */
-import dbConnect from '@utils/dbConnect';
-import Customers from '@models/Customers';
-import format from 'date-fns/format';
-import cheerio from 'cheerio';
-import axios from 'axios';
 import { themeShop } from '@constants/themeShop';
+import Customers from '@models/Customers';
+import axios from 'axios';
+import cheerio from 'cheerio';
+import { endOfDay, startOfDay } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
+import dbConnect from './dbConnect';
 
 dbConnect();
 
@@ -28,7 +28,10 @@ export const crawlData = async () => {
 
         yesterday.setDate(yesterday.getDate() - 1);
         const data = await Customers.find({
-          created_at: format(yesterday, 'MM/dd/yyyy'),
+          createdAt: {
+            $gte: startOfDay(yesterday),
+            $lte: endOfDay(yesterday),
+          },
         });
         return data;
       };
@@ -38,7 +41,11 @@ export const crawlData = async () => {
       const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
       await Customers.findOneAndUpdate(
         {
-          created_at: format(currentDate, 'MM/dd/yyyy'),
+          createdAt: {
+            $gte: startOfDay(currentDate),
+            $lte: endOfDay(currentDate),
+          },
+          // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId: themeId,
           name: name,
         },

@@ -14,7 +14,7 @@ function ComparedDate({ onChangeDate, dates }) {
   const handleMonthChange = useCallback((month, year) => setDate({ month, year }), []);
 
   useEffect(() => {
-    if (dates) handleMonthChange(getMonth(dates.start), getYear(dates.end));
+    if (dates) handleMonthChange(getMonth(dates.start), getYear(dates.start));
   }, [dates]);
 
   return (

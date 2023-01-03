@@ -30,12 +30,23 @@ export default function useDateSelector({
   const compareRef = useRef();
   const selectedOption = useRef();
 
-  useEffect(() => {
-    selectedRef.current = selectedDate;
-    comparedRef.current = comparedDate;
-    compareRef.current = compare;
-    selectedOption.current = dateSelectedOption;
-  }, []);
+  // useEffect(() => {
+  //   selectedRef.current = selectedDate;
+  //   comparedRef.current = comparedDate;
+  //   compareRef.current = compare;
+  //   selectedOption.current = dateSelectedOption;
+  // }, []);
+
+  // useEffect(() => {
+  //   if (active) {
+  //     selectedRef.current = selectedDate;
+  //     comparedRef.current = comparedDate;
+  //     compareRef.current = compare;
+  //     selectedOption.current = dateSelectedOption;
+  //   }
+  // }, [active]);
+
+  // console.log(selectedRef.current, comparedRef.current);
 
   useEffect(() => {
     if (!compare) onChangeComparedDate(null);
@@ -55,19 +66,19 @@ export default function useDateSelector({
 
   const handleCloseDateSelector = () => {
     setActive(false);
-    onChangeSelectedDate(selectedRef.current);
-    onChangeSelectedDate(comparedRef.current);
+    // onChangeSelectedDate(selectedRef.current);
+    // onChangeSelectedDate(comparedRef.current);
     setCompare(comparedRef.current);
-    setDateSelectedOption(selectedOption.current);
+    // setDateSelectedOption(selectedOption.current);
   };
 
   const handleApply = () => {
     onConfirm();
     setActive(false);
-    selectedRef.current = selectedDate;
-    comparedRef.current = comparedDate;
-    compareRef.current = compare;
-    selectedOption.current = dateSelectedOption;
+    // selectedRef.current = selectedDate;
+    // comparedRef.current = comparedDate;
+    // compareRef.current = compare;
+    // selectedOption.current = dateSelectedOption;
   };
 
   return {

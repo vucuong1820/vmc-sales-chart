@@ -1,12 +1,12 @@
 /* eslint-disable no-useless-escape */
-import axios from 'axios';
-import * as cheerio from 'cheerio';
-import { utcToZonedTime } from 'date-fns-tz';
-import format from 'date-fns/format';
 import { themeShop } from '@constants/themeShop';
+import dbConnect from '@helpers/dbConnect';
 import { getDateRange } from '@helpers/utils';
 import Customers from '@models/Customers';
-import dbConnect from '@utils/dbConnect';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { endOfDay, startOfDay } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 
 dbConnect();
 
@@ -16,9 +16,9 @@ export default async function handler(req, res) {
 
   const time = getDateRange('this_week');
   const response = await Customers.find({
-    created_at: {
-      $gte: format(time.start, 'MM/dd/yyyy'),
-      $lte: format(time.end, 'MM/dd/yyyy'),
+    createdAt: {
+      $gte: startOfDay(new Date(time.start)),
+      $lte: endOfDay(new Date(time.end)),
     },
   });
 
@@ -48,7 +48,11 @@ const crawlData = async (theme) => {
     if (filterData.length === 0) {
       await Customers.findOneAndUpdate(
         {
-          created_at: format(yesterday, 'MM/dd/yyyy'),
+          createdAt: {
+            $gte: startOfDay(yesterday),
+            $lte: endOfDay(yesterday),
+          },
+          // created_at: format(yesterday, 'MM/dd/yyyy'),
           themeId,
           name,
         },
@@ -63,7 +67,11 @@ const crawlData = async (theme) => {
     } else {
       await Customers.findOneAndUpdate(
         {
-          created_at: format(currentDate, 'MM/dd/yyyy'),
+          createdAt: {
+            $gte: startOfDay(currentDate),
+            $lte: endOfDay(currentDate),
+          },
+          // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId,
           name,
         },
@@ -89,7 +97,11 @@ const getPreviousData = async () => {
 
   yesterday.setDate(yesterday.getDate() - 1);
   const data = await Customers.find({
-    created_at: format(yesterday, 'MM/dd/yyyy'),
+    createdAt: {
+      $gte: startOfDay(yesterday),
+      $lte: endOfDay(yesterday),
+    },
+    // created_at: format(yesterday, 'MM/dd/yyyy'),
   });
   return data;
 };

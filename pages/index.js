@@ -1,6 +1,7 @@
 import CompareChart from '@components/CompareChart';
 import SaleGrowthChart from '@components/SalesGrowth';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
+import autoCrawl from '@services/autoCrawl';
 import { AppProvider, DisplayText, Layout, Page, Stack } from '@shopify/polaris';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
@@ -13,6 +14,7 @@ function Home() {
   useEffect(() => {
     (async () => {
       try {
+        autoCrawl();
         await crawlThemeShops();
       } catch (error) {
         // console.log(error);

@@ -1,5 +1,6 @@
-import { crawlData } from '@helpers/crawlData';
+import crawlJob from '@helpers/autoCrawlData';
 
-export default async function handler() {
-  await crawlData();
+export default async function handler(req, res) {
+  crawlJob.start();
+  res.json();
 }
