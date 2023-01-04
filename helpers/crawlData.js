@@ -3,9 +3,9 @@ import { themeShop } from '@constants/themeShop';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { endOfDay, startOfDay } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 import dbConnect from './dbConnect';
+import formatDate from './formatDate';
 
 dbConnect();
 
@@ -20,7 +20,7 @@ export const crawlData = async () => {
         const $ = cheerio.load(res.data);
         presentSales = $('.item-header__sales-count').text();
         review = $('.is-visually-hidden').text();
-        reviewQuantity = $('t-body -size-l h-m0').text();
+        reviewQuantity = $('.t-body.-size-l.h-m0').text();
       });
       const getPreviousData = async () => {
         const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
@@ -29,8 +29,8 @@ export const crawlData = async () => {
         yesterday.setDate(yesterday.getDate() - 1);
         const data = await Customers.find({
           createdAt: {
-            $gte: startOfDay(yesterday),
-            $lte: endOfDay(yesterday),
+            $gte: formatDate(yesterday).startingDate,
+            $lte: formatDate(yesterday).endingDate,
           },
         });
         return data;
@@ -42,8 +42,8 @@ export const crawlData = async () => {
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: startOfDay(currentDate),
-            $lte: endOfDay(currentDate),
+            $gte: formatDate(currentDate).startingDate,
+            $lte: formatDate(currentDate).endingDate,
           },
           // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId: themeId,

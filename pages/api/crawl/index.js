@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-escape */
 import { themeShop } from '@constants/themeShop';
 import dbConnect from '@helpers/dbConnect';
+import formatDate from '@helpers/formatDate';
 import { getDateRange } from '@helpers/utils';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { endOfDay, startOfDay } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 
 dbConnect();
@@ -17,8 +17,8 @@ export default async function handler(req, res) {
   const time = getDateRange('this_week');
   const response = await Customers.find({
     createdAt: {
-      $gte: startOfDay(new Date(time.start)),
-      $lte: endOfDay(new Date(time.end)),
+      $gte: formatDate(new Date(time.start)).startingDate,
+      $lte: formatDate(new Date(time.end)).endingDate,
     },
   });
 
@@ -49,8 +49,8 @@ const crawlData = async (theme) => {
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: startOfDay(yesterday),
-            $lte: endOfDay(yesterday),
+            $gte: formatDate(yesterday).startingDate,
+            $lte: formatDate(yesterday).endingDate,
           },
           // created_at: format(yesterday, 'MM/dd/yyyy'),
           themeId,
@@ -68,8 +68,8 @@ const crawlData = async (theme) => {
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: startOfDay(currentDate),
-            $lte: endOfDay(currentDate),
+            $gte: formatDate(currentDate).startingDate,
+            $lte: formatDate(currentDate).endingDate,
           },
           // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId,
@@ -98,10 +98,25 @@ const getPreviousData = async () => {
   yesterday.setDate(yesterday.getDate() - 1);
   const data = await Customers.find({
     createdAt: {
-      $gte: startOfDay(yesterday),
-      $lte: endOfDay(yesterday),
+      $gte: formatDate(yesterday).startingDate,
+      $lte: formatDate(yesterday).endingDate,
     },
     // created_at: format(yesterday, 'MM/dd/yyyy'),
   });
   return data;
 };
+
+// const createOrUpdateThemeData = async ({ filters, payload }) => {
+//   let themeData = await Customers.findOne({ ...filters });
+//   if (themeData) {
+//     for (const key in payload) {
+//       const value = payload[key];
+//       themeData[key] = value;
+//     }
+//   } else {
+//     themeData = new Customers({
+//       ...filters,
+//       ...payload,
+//     });
+//   }
+// };

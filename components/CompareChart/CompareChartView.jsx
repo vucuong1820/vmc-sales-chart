@@ -7,7 +7,7 @@ import { Button, Card, FormLayout, Heading, Stack } from '@shopify/polaris';
 import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import { cloneDeep } from 'lodash';
 import dynamic from 'next/dynamic';
-import useCompareChart from './useCompareChart';
+import useCompareChart from './useCompareChart.jsx';
 const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);

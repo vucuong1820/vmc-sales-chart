@@ -1,5 +1,6 @@
 import { themeShop } from '@constants/themeShop';
 import dbConnect from '@helpers/dbConnect';
+import formatDate from '@helpers/formatDate';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -22,8 +23,8 @@ export default async function handler(req, res) {
 
   const filters = {
     createdAt: {
-      $gte: startingDate,
-      $lte: endingDate,
+      $gte: formatDate(new Date(startingDay)).startingDate,
+      $lte: formatDate(new Date(endingDay)).endingDate,
     },
   };
 

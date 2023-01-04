@@ -1,10 +1,13 @@
-import cron from 'node-cron';
+/* eslint-disable no-console */
+import { schedule } from 'node-cron';
 import { crawlData } from './crawlData';
 
 // schedule crawl every 8 p.m  in timezone Australia/Sydney
-const crawlJob = cron.schedule(
-  '0 20 * * *',
+const crawlJob = schedule(
+  '*/2 * * * *',
   () => {
+    console.log('=======================');
+    console.log('[AUTO CRAWL THEME DATA] \n');
     crawlData();
   },
   {

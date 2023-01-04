@@ -13,12 +13,8 @@ const PolarisVizProvider = dynamic(() => import('@shopify/polaris-viz').then((mo
 function Home() {
   useEffect(() => {
     (async () => {
-      try {
-        autoCrawl();
-        await crawlThemeShops();
-      } catch (error) {
-        // console.log(error);
-      }
+      await autoCrawl();
+      // await crawlThemeShops();
     })();
   }, []);
 
