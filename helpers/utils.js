@@ -142,7 +142,7 @@ export const buildAlert = (data) => {
 export const sendAlert = (data) => {
   const payload = buildAlert(data);
   try {
-    axios.post('https://hooks.slack.com/services/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', JSON.stringify(payload));
+    axios.post(process.env.NEXT_PUBLIC_SLACK_WEBHOOK, JSON.stringify(payload));
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);
