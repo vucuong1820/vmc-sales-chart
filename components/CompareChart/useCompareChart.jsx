@@ -85,7 +85,7 @@ export default function useCompareChart() {
     selectedDate,
     loading,
     handleClick,
-    rows: Array.from(rows).sort((a, b) => Number.parseFloat(b[1]?.replace(',', '')) - Number.parseFloat(a[1]?.replace(',', ''))),
+    rows: Array.from(rows).sort((a, b) => Number.parseFloat(b[3]) - Number.parseFloat(a[3])),
     datasets,
   };
 }
