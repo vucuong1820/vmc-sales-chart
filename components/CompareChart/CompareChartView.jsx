@@ -52,8 +52,7 @@ function CompareChart() {
       <Table rows={rows} loading={loading} />
       <Card.Section subdued>
         <div style={{ height: '500px', position: 'relative' }}>
-          {loading && <Loading.Center size="large" />}
-          {!loading && datasets?.length > 0 && (
+          {datasets?.length > 0 && (
             <LineChart
               data={datasets}
               isAnimated

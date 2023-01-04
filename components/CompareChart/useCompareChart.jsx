@@ -2,27 +2,13 @@
 import { themeShop } from '@constants/themeShop';
 import { getDateRange, sendAlert } from '@helpers/utils';
 import getThemeData from '@services/getThemeData';
-import { SkeletonDisplayText, SkeletonThumbnail } from '@shopify/polaris';
 import { format } from 'date-fns';
 import { cloneDeep } from 'lodash';
 import { useEffect, useState } from 'react';
 
-const initRows = themeShop.map(() => [
-  <SkeletonDisplayText key={1} />,
-  <div className="skeleton-item" key={2}>
-    <SkeletonThumbnail size="small" />
-  </div>,
-  <div className="skeleton-item" key={3}>
-    <SkeletonThumbnail size="small" />
-  </div>,
-  <div className="skeleton-item" key={4}>
-    <SkeletonThumbnail size="small" />
-  </div>,
-]);
-
 export default function useCompareChart() {
   const [datasets, setDatasets] = useState([]);
-  const [rows, setRows] = useState(initRows);
+  const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
 
@@ -35,11 +21,12 @@ export default function useCompareChart() {
   }, []);
 
   const handleChange = async () => {
-    setRows(initRows);
+    setLoading(true);
     for (let index = 0; index < themeShop.length; index++) {
       const theme = themeShop[index];
-      getData(index, theme);
+      await getData(index, theme);
     }
+    setLoading(false);
   };
 
   const getData = async (index, theme) => {
@@ -91,13 +78,14 @@ export default function useCompareChart() {
   const handleClick = () => {
     sendAlert(rows);
   };
+
   return {
     handleChange,
     handleChangeDate,
     selectedDate,
     loading,
     handleClick,
-    rows,
+    rows: Array.from(rows).sort((a, b) => Number.parseFloat(b[1]?.replace(',', '')) - Number.parseFloat(a[1]?.replace(',', ''))),
     datasets,
   };
 }

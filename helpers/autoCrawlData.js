@@ -4,7 +4,7 @@ import { crawlData } from './crawlData';
 
 // schedule crawl every 8 p.m  in timezone Australia/Sydney
 const crawlJob = schedule(
-  '*/2 * * * *',
+  '* 20 * * *',
   () => {
     console.log('=======================');
     console.log('[AUTO CRAWL THEME DATA] \n');
