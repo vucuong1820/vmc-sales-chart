@@ -2,9 +2,9 @@
   "name": "minimog-sales-chart",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "lint": "next lint",
     "eslint": "eslint --ext .js,.jsx,.mjs --fix ."
   },

@@ -3,6 +3,9 @@ import formatDate from '@helpers/formatDate';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import dbConnect from 'configs/dbConnect';
+
+dbConnect();
 
 export default async function handler(req, res) {
   const { startingDay, endingDay, themeId } = req.query;

@@ -5,7 +5,10 @@ import { getDateRange } from '@helpers/utils';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import dbConnect from 'configs/dbConnect';
 import { utcToZonedTime } from 'date-fns-tz';
+
+dbConnect();
 
 export default async function handler(req, res) {
   const { theme } = req.query;

@@ -3,8 +3,10 @@ import { themeShop } from '@constants/themeShop';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import cheerio from 'cheerio';
-import { utcToZonedTime } from 'date-fns-tz';
+import dbConnect from 'configs/dbConnect';
 import formatDate from './formatDate';
+
+dbConnect();
 
 export const crawlData = async () => {
   try {
@@ -20,8 +22,8 @@ export const crawlData = async () => {
         reviewQuantity = $('.t-body.-size-l.h-m0').text();
       });
       const getPreviousData = async () => {
-        const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
-        const yesterday = new Date(currentDate);
+        const currentDate = new Date();
+        const yesterday = currentDate;
 
         yesterday.setDate(yesterday.getDate() - 1);
         const data = await Customers.find({
@@ -35,12 +37,12 @@ export const crawlData = async () => {
 
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
-      const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
+      const currentDate = new Date();
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: formatDate(currentDate).startingDate,
-            $lte: formatDate(currentDate).endingDate,
+            $gte: formatDate(currentDate).startingDate.toISOString(),
+            $lte: formatDate(currentDate).endingDate.toISOString(),
           },
           // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId: themeId,

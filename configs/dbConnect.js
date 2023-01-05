@@ -16,7 +16,6 @@ async function dbConnect() {
 
   connection.isConnected = db.connections[0].readyState;
   // eslint-disable-next-line no-console
-  console.log('[DB]: CONNECTED DATABASE ');
 }
 
 module.exports = dbConnect;
