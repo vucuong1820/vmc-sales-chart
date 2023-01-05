@@ -51,8 +51,8 @@ const crawlData = async (theme) => {
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: formatDate(yesterday).startingDate,
-            $lte: formatDate(yesterday).endingDate,
+            $gte: formatDate(yesterday).startingDate.toISOString(),
+            $lte: formatDate(yesterday).endingDate.toISOString(),
           },
           // created_at: format(yesterday, 'MM/dd/yyyy'),
           themeId,
@@ -70,8 +70,8 @@ const crawlData = async (theme) => {
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: formatDate(currentDate).startingDate,
-            $lte: formatDate(currentDate).endingDate,
+            $gte: formatDate(currentDate).startingDate.toISOString(),
+            $lte: formatDate(currentDate).endingDate.toISOString(),
           },
           // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId,
@@ -93,14 +93,14 @@ const crawlData = async (theme) => {
 };
 
 const getPreviousData = async () => {
-  const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
-  const yesterday = new Date(currentDate);
+  const currentDate = new Date();
+  const yesterday = currentDate;
 
   yesterday.setDate(yesterday.getDate() - 1);
   const data = await Customers.find({
     createdAt: {
-      $gte: formatDate(yesterday).startingDate,
-      $lte: formatDate(yesterday).endingDate,
+      $gte: formatDate(yesterday).startingDate.toISOString(),
+      $lte: formatDate(yesterday).endingDate.toISOString(),
     },
     // created_at: format(yesterday, 'MM/dd/yyyy'),
   });

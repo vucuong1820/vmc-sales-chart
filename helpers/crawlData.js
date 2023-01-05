@@ -28,8 +28,8 @@ export const crawlData = async () => {
         yesterday.setDate(yesterday.getDate() - 1);
         const data = await Customers.find({
           createdAt: {
-            $gte: formatDate(yesterday).startingDate,
-            $lte: formatDate(yesterday).endingDate,
+            $gte: formatDate(yesterday).startingDate.toISOString(),
+            $lte: formatDate(yesterday).endingDate.toISOString(),
           },
         });
         return data;
