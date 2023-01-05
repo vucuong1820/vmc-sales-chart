@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const { createServer } = require('http');
 const { parse } = require('url');
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 function run(app) {
   const handle = app.getRequestHandler();

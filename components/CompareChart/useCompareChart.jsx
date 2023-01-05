@@ -22,12 +22,12 @@ export default function useCompareChart() {
   }, []);
 
   const handleChange = async () => {
-    setLoading(true);
+    // setLoading(true);
     for (let index = 0; index < themeShop.length; index++) {
       const theme = themeShop[index];
       getData(index, theme);
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   const getData = async (index, theme) => {

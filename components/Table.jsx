@@ -1,3 +1,4 @@
+import { themeShop } from '@constants/themeShop';
 import { Card, DataTable, SkeletonDisplayText, SkeletonThumbnail } from '@shopify/polaris';
 import React from 'react';
 import styled from 'styled-components';
@@ -30,7 +31,7 @@ function Table({ rows, loading }) {
         <DataTable
           columnContentTypes={['text', 'numeric', 'numeric', 'numeric']}
           headings={['Name', 'All-time sales', 'Rating', 'Sales']}
-          rows={loading ? skeletonRows : rows}
+          rows={rows?.length === themeShop?.length ? rows : skeletonRows}
         />
       </TableWrapper>
     </Card.Section>

@@ -5,7 +5,7 @@ const serverConnect = require('./configs/serverConnect');
 const agendaConnect = require('./configs/agendaConnect');
 
 const dev = process.env.NODE_ENV !== 'production';
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const app = next({ dev, port });
 
 app.prepare().then(async () => {
