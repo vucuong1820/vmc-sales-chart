@@ -2,7 +2,7 @@
   "name": "minimog-sales-chart",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,6 +17,7 @@
     "@shopify/polaris": "^9.23.1",
     "@shopify/polaris-icons": "^6.7.0",
     "@shopify/polaris-viz": "^7.11.1",
+    "agenda": "^5.0.0",
     "axios": "^0.25.0",
     "chart.js": "^3.8.0",
     "cheerio": "^1.0.0-rc.10",
@@ -24,6 +25,7 @@
     "date-fns-tz": "^1.2.2",
     "dotenv": "^14.3.2",
     "express": "^4.17.2",
+    "http": "^0.0.1-security",
     "lodash": "^4.17.21",
     "mongoose": "^6.1.7",
     "next": "^13.1.1",
@@ -33,7 +35,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.3.1",
     "react-multi-date-picker": "^3.3.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^4.2.1",

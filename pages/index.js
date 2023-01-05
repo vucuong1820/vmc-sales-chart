@@ -1,7 +1,6 @@
 import CompareChart from '@components/CompareChart';
 import SaleGrowthChart from '@components/SalesGrowth';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
-import autoCrawl from '@services/autoCrawl';
 import { AppProvider, DisplayText, Layout, Page, Stack } from '@shopify/polaris';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
@@ -13,8 +12,7 @@ const PolarisVizProvider = dynamic(() => import('@shopify/polaris-viz').then((mo
 function Home() {
   useEffect(() => {
     (async () => {
-      await autoCrawl();
-      // await crawlThemeShops();
+      await crawlThemeShops();
     })();
   }, []);
 
@@ -35,9 +33,9 @@ function Home() {
                     </Stack.Item>
                   </Stack>
                 </div>
-                <CompareChart />
                 <SaleGrowthChart mode={CHART_GROWTH_MAPPING.SALES.key} />
                 <SaleGrowthChart mode={CHART_GROWTH_MAPPING.REVIEWS.key} />
+                <CompareChart />
               </Layout.Section>
             </Layout>
           </Page>

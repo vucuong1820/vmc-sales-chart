@@ -4,10 +4,7 @@ import Customers from '@models/Customers';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { utcToZonedTime } from 'date-fns-tz';
-import dbConnect from './dbConnect';
 import formatDate from './formatDate';
-
-dbConnect();
 
 export const crawlData = async () => {
   try {
@@ -53,7 +50,6 @@ export const crawlData = async () => {
           quantity: Number(presentSales.replace(/\D/g, '')) - fixedSales,
           sales: Number(presentSales.replace(/\D/g, '')) - fixedSales - filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: currentDate,
           reviewQuantity: Number(reviewQuantity.replace(/\D/g, '')) - fixedReviews,
         },
         { upsert: true },

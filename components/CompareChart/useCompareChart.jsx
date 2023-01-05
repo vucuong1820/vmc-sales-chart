@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import { themeShop } from '@constants/themeShop';
+import { themeShop } from '@constants/themeShop.js';
 import { getDateRange, sendAlert } from '@helpers/utils';
 import getThemeData from '@services/getThemeData';
 import { format } from 'date-fns';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { useEffect, useState } from 'react';
 
 export default function useCompareChart() {
@@ -11,6 +11,7 @@ export default function useCompareChart() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
+  const [selectedDatasets, setSelectedDatasets] = useState([]);
 
   const handleChangeDate = (newSelectedDate) => {
     if (newSelectedDate) setSelectedDate(newSelectedDate);
@@ -24,7 +25,7 @@ export default function useCompareChart() {
     setLoading(true);
     for (let index = 0; index < themeShop.length; index++) {
       const theme = themeShop[index];
-      await getData(index, theme);
+      getData(index, theme);
     }
     setLoading(false);
   };
@@ -55,8 +56,13 @@ export default function useCompareChart() {
       });
       setRows((prev) => {
         const cloneData = cloneDeep(prev);
-        cloneData[index] = formatThemeRow(result);
-        return cloneData;
+        const index = cloneData.findIndex((item) => item?.[0] === theme.name);
+        if (index !== -1) {
+          cloneData[index] = formatThemeRow(result);
+          return cloneData;
+        } else {
+          return [...cloneData, formatThemeRow(result)];
+        }
       });
     } catch (error) {
       console.log(error);
@@ -79,6 +85,18 @@ export default function useCompareChart() {
     sendAlert(rows);
   };
 
+  const handleSelectLegend = (item) => {
+    setSelectedDatasets((prev) => {
+      const index = prev.findIndex((data) => data?.name === item?.name);
+      if (index !== -1) {
+        const cloneData = cloneDeep(prev);
+        cloneData.splice(index, 1);
+        return cloneData;
+      }
+      return [...prev, item];
+    });
+  };
+
   return {
     handleChange,
     handleChangeDate,
@@ -87,5 +105,7 @@ export default function useCompareChart() {
     handleClick,
     rows: Array.from(rows).sort((a, b) => Number.parseFloat(b[3]) - Number.parseFloat(a[3])),
     datasets,
+    selectedDatasets,
+    handleSelectLegend,
   };
 }

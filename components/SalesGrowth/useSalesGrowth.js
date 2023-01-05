@@ -109,6 +109,7 @@ export default function useSalesGrowth({ mode }) {
 
         const dataList = data?.items?.map((item) => {
           const originValue = mode === CHART_GROWTH_MAPPING.REVIEWS.key ? item?.reviewsPerDay ?? 0 : item?.sales;
+
           return {
             key: format(new Date(item?.createdAt), 'MM/dd/yyyy'),
             value: mode === CHART_GROWTH_MAPPING.REVIEWS.key ? originValue + FIXED_REVIEW_VALUE : originValue,

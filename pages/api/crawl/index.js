@@ -1,14 +1,11 @@
 /* eslint-disable no-useless-escape */
 import { themeShop } from '@constants/themeShop';
-import dbConnect from '@helpers/dbConnect';
 import formatDate from '@helpers/formatDate';
 import { getDateRange } from '@helpers/utils';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { utcToZonedTime } from 'date-fns-tz';
-
-dbConnect();
 
 export default async function handler(req, res) {
   const { theme } = req.query;
@@ -17,8 +14,8 @@ export default async function handler(req, res) {
   const time = getDateRange('this_week');
   const response = await Customers.find({
     createdAt: {
-      $gte: formatDate(new Date(time.start)).startingDate,
-      $lte: formatDate(new Date(time.end)).endingDate,
+      $gte: time.start,
+      $lte: time.end,
     },
   });
 
@@ -42,9 +39,11 @@ const crawlData = async (theme) => {
     const previousDate = await getPreviousData();
 
     const filterData = previousDate.filter((item) => item.name === name);
-    const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
-    const yesterday = new Date(currentDate);
+    // const currentDate = utcToZonedTime(new Date(), 'Australia/Sydney');
+    let currentDate = new Date();
+    let yesterday = new Date(currentDate);
     yesterday.setDate(yesterday.getDate() - 1);
+    currentDate = currentDate.toISOString();
     if (filterData.length === 0) {
       await Customers.findOneAndUpdate(
         {
@@ -79,7 +78,6 @@ const crawlData = async (theme) => {
           quantity: Number(presentSales.replace(/\D/g, '')) - fixedSales,
           sales: Number(presentSales.replace(/\D/g, '')) - fixedSales - filterData[0].quantity,
           review: Number(parseFloat(review.match(/[\d\.]+/))),
-          updatedAt: currentDate,
           reviewQuantity: Number(reviewQuantity.replace(/\D/g, '')) - fixedReviews,
           reviewsPerDay: Number(reviewQuantity.replace(/\D/g, '')) - fixedReviews - (filterData?.[0]?.reviewQuantity ?? 0),
         },

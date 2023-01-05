@@ -28,8 +28,8 @@ const getData = async () => {
     const time = getDateRange('this_week');
     const data = await Customers.find({
       createdAt: {
-        $gte: formatDate(new Date(time.start)).startingDate,
-        $lte: formatDate(new Date(time.start)).endingDate,
+        $gte: formatDate(new Date(time.start)).startingDate.toISOString(),
+        $lte: formatDate(new Date(time.start)).endingDate.toISOString(),
       },
     });
 

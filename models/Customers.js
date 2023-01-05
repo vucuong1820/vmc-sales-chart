@@ -9,7 +9,6 @@ const CustomersSchema = new mongoose.Schema(
     url: String,
     review: Number,
     sales: Number,
-    updatedAt: String,
     reviewQuantity: Number,
     reviewsPerDay: Number,
   },
