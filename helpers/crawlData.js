@@ -18,8 +18,8 @@ const getPreviousData = async () => {
   yesterday.setDate(yesterday.getDate() - 1);
   const data = await Customers.find({
     createdAt: {
-      $gte: zonedTimeToUtc(startOfDay(yesterday), TIME_ZONE).toISOString(),
-      $lte: zonedTimeToUtc(endOfDay(yesterday), TIME_ZONE).toISOString(),
+      $gte: zonedTimeToUtc(startOfDay(utcToZonedTime(yesterday, TIME_ZONE)), TIME_ZONE),
+      $lte: zonedTimeToUtc(endOfDay(utcToZonedTime(yesterday, TIME_ZONE)), TIME_ZONE),
     },
   });
   return data;
@@ -41,7 +41,12 @@ export const crawlData = async () => {
 
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
+      console.log(filterData?.[0]?.quantity);
       const currentDate = new Date();
+      // console.log({
+      //   $gte: zonedTimeToUtc(startOfDay(utcToZonedTime(currentDate, TIME_ZONE)), TIME_ZONE).toISOString(),
+      //   $lte: zonedTimeToUtc(endOfDay(utcToZonedTime(currentDate, TIME_ZONE)), TIME_ZONE).toISOString(),
+      // });
       await Customers.findOneAndUpdate(
         {
           createdAt: {

@@ -1,3 +1,4 @@
+import { TIME_ZONE } from '@constants';
 import { themeShop } from '@constants/themeShop';
 import axios from 'axios';
 import {
@@ -14,10 +15,12 @@ import {
   startOfYesterday,
   subDays,
 } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 
 export const getDateRange = (date) => {
-  const today = new Date();
-  const dayOfLastWeek = new Date(new Date().setDate(new Date().getDate() - 7));
+  // console.log(utcToZonedTime(new Date(), TIME_ZONE));
+  const today = utcToZonedTime(new Date(), TIME_ZONE);
+  const dayOfLastWeek = subDays(today, 7);
 
   let range;
 
