@@ -1,5 +1,7 @@
+import { TIME_ZONE } from '@constants';
 import { DatePicker, Stack, TextField } from '@shopify/polaris';
 import { format, getMonth, getYear } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -31,8 +33,8 @@ function ComparedDate({ onChangeDate, dates }) {
               onChange={onChangeDate}
               onMonthChange={handleMonthChange}
               selected={dates}
-              disableDatesAfter={new Date()}
               allowRange
+              disableDatesAfter={utcToZonedTime(new Date(), TIME_ZONE)}
             />
           </Stack.Item>
         </Stack>

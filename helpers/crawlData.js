@@ -1,12 +1,29 @@
+/* eslint-disable no-console */
 /* eslint-disable no-useless-escape */
+import { TIME_ZONE } from '@constants';
 import { themeShop } from '@constants/themeShop';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import dbConnect from 'configs/dbConnect';
-import formatDate from './formatDate';
+import { endOfDay, startOfDay } from 'date-fns';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 
 dbConnect();
+
+const getPreviousData = async () => {
+  const currentDate = new Date();
+  const yesterday = currentDate;
+
+  yesterday.setDate(yesterday.getDate() - 1);
+  const data = await Customers.find({
+    createdAt: {
+      $gte: zonedTimeToUtc(startOfDay(yesterday), TIME_ZONE).toISOString(),
+      $lte: zonedTimeToUtc(endOfDay(yesterday), TIME_ZONE).toISOString(),
+    },
+  });
+  return data;
+};
 
 export const crawlData = async () => {
   try {
@@ -21,19 +38,6 @@ export const crawlData = async () => {
         review = $('.is-visually-hidden').text();
         reviewQuantity = $('.t-body.-size-l.h-m0').text();
       });
-      const getPreviousData = async () => {
-        const currentDate = new Date();
-        const yesterday = currentDate;
-
-        yesterday.setDate(yesterday.getDate() - 1);
-        const data = await Customers.find({
-          createdAt: {
-            $gte: formatDate(yesterday).startingDate.toISOString(),
-            $lte: formatDate(yesterday).endingDate.toISOString(),
-          },
-        });
-        return data;
-      };
 
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
@@ -41,24 +45,22 @@ export const crawlData = async () => {
       await Customers.findOneAndUpdate(
         {
           createdAt: {
-            $gte: formatDate(currentDate).startingDate.toISOString(),
-            $lte: formatDate(currentDate).endingDate.toISOString(),
+            $gte: zonedTimeToUtc(startOfDay(utcToZonedTime(currentDate, TIME_ZONE)), TIME_ZONE).toISOString(),
+            $lte: zonedTimeToUtc(endOfDay(utcToZonedTime(currentDate, TIME_ZONE)), TIME_ZONE).toISOString(),
           },
-          // created_at: format(currentDate, 'MM/dd/yyyy'),
           themeId: themeId,
           name: name,
         },
         {
           quantity: Number(presentSales.replace(/\D/g, '')) - fixedSales,
-          sales: Number(presentSales.replace(/\D/g, '')) - fixedSales - filterData[0].quantity,
+          sales: Number(presentSales.replace(/\D/g, '')) - fixedSales - (filterData?.[0]?.quantity ?? 0),
           review: Number(parseFloat(review.match(/[\d\.]+/))),
           reviewQuantity: Number(reviewQuantity.replace(/\D/g, '')) - fixedReviews,
         },
         { upsert: true },
       );
-      // }
     });
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
 };

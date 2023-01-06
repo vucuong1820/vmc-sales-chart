@@ -1,5 +1,5 @@
 import { themeShop } from '@constants/themeShop';
-import formatDate from '@helpers/formatDate';
+import migrateTimestamp from '@helpers/migrateTimestamp';
 import Customers from '@models/Customers';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -9,6 +9,7 @@ dbConnect();
 
 export default async function handler(req, res) {
   const { startingDay, endingDay, themeId } = req.query;
+
   // await migrateTimestamp();
   let presentSales;
   let reviewQuantity;

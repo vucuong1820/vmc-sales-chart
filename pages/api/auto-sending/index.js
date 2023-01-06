@@ -1,5 +1,5 @@
 import { themeShop } from '@constants/themeShop';
-import formatDate from '@helpers/formatDate';
+import formatStartEndDate from '@helpers/formatStartEndDate';
 import { buildAlert, getDateRange, sendAlert } from '@helpers/utils';
 import Customers from '@models/Customers';
 
@@ -28,8 +28,8 @@ const getData = async () => {
     const time = getDateRange('this_week');
     const data = await Customers.find({
       createdAt: {
-        $gte: formatDate(new Date(time.start)).startingDate.toISOString(),
-        $lte: formatDate(new Date(time.start)).endingDate.toISOString(),
+        $gte: formatStartEndDate(time).start.toISOString(),
+        $lte: formatStartEndDate(time).end.toISOString(),
       },
     });
 

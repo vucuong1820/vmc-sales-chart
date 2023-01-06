@@ -2,9 +2,11 @@ import CompareChart from '@components/CompareChart';
 import SaleGrowthChart from '@components/SalesGrowth';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
 import autoCrawl from '@services/autoCrawl';
+import migrateTimestampService from '@services/migrateTimeStampService';
 import { AppProvider, DisplayText, Layout, Page, Stack } from '@shopify/polaris';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
+import { utcToZonedTime, format, zonedTimeToUtc } from 'date-fns-tz';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import crawlThemeShops from 'services/crawlThemeShops';
@@ -13,10 +15,17 @@ const PolarisVizProvider = dynamic(() => import('@shopify/polaris-viz').then((mo
 function Home() {
   useEffect(() => {
     (async () => {
+      // await migrateTimestampService();
       await autoCrawl();
       await crawlThemeShops();
     })();
   }, []);
+
+  // const start = zonedTimeToUtc(new Date(2023, 0, 6, 23, 59, 59), TIME_ZONE);
+
+  // const end = zonedTimeToUtc(new Date(2023, 0, 6, 0, 0, 0), TIME_ZONE);
+
+  // console.log(start.toISOString(), end.toISOString());
 
   return (
     <AppProvider i18n={en}>

@@ -1,3 +1,5 @@
+import { TIME_ZONE } from '@constants';
+import { JOB_EXPRESSION, JOB_NAME } from '@constants/agenda';
 import Agenda from 'agenda';
 import { crawlData } from './crawlData';
 
@@ -7,19 +9,19 @@ const agendaInstance = new Agenda({
 });
 
 async function agendaJob() {
-  agendaInstance.define('crawl theme data', async (job, done) => {
+  agendaInstance.define(JOB_NAME, async (job, done) => {
     console.log('=======================');
     console.log('[AGENDA]: AUTO CRAWL THEME DATA');
     await crawlData();
   });
 
   (async function () {
-    const crawlThemeData = agendaInstance.create('crawl theme data').unique({ name: 'crawl theme data' });
+    const crawlThemeData = agendaInstance.create(JOB_NAME).unique({ name: JOB_NAME });
     crawlThemeData.schedule();
     await agendaInstance.start();
     await crawlThemeData
-      .repeatEvery('30 23 * * *', {
-        timezone: 'Australia/Sydney',
+      .repeatEvery(JOB_EXPRESSION, {
+        timezone: TIME_ZONE,
       })
       .save();
   })();

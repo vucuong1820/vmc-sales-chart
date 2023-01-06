@@ -12,7 +12,7 @@ async function dbConnect() {
     useUnifiedTopology: true,
   });
 
-  // mongoose.set('debug', true);
+  mongoose.set('debug', true);
 
   connection.isConnected = db.connections[0].readyState;
   // eslint-disable-next-line no-console

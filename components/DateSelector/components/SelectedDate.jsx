@@ -1,5 +1,7 @@
+import { TIME_ZONE } from '@constants';
 import { DatePicker, Stack, TextField } from '@shopify/polaris';
 import { format, getMonth, getYear } from 'date-fns';
+import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
 import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { DATE_OPTIONS } from '../useDateSelector';
@@ -35,8 +37,8 @@ function SelectedDate({ onChangeDate, dates, onChangeOptions, onSetSelected }) {
               onChange={handleChangeDate}
               onMonthChange={handleMonthChange}
               selected={dates}
-              disableDatesAfter={new Date()}
               allowRange
+              disableDatesAfter={utcToZonedTime(new Date(), TIME_ZONE)}
             />
           </Stack.Item>
         </Stack>
