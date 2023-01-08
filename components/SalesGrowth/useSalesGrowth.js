@@ -2,6 +2,7 @@ import { CHART_GROWTH_MAPPING } from '@constants/chart';
 import { themeShop } from '@constants/themeShop';
 import { getCompareDate, getDateRange } from '@helpers/utils';
 import { format } from 'date-fns';
+import { useNotificationStore } from 'providers/NotificationProvider';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import getGrowthChartData from 'services/getGrowthChartData';
 
@@ -30,13 +31,22 @@ export default function useSalesGrowth({ mode }) {
   const [comparedDate, setComparedDate] = useState(getCompareDate(getDateRange('this_week')));
   const [loading, setLoading] = useState(false);
   const [datasets, setDatasets] = useState([]);
+  const { showToast } = useNotificationStore();
 
   useEffect(() => {
     (async () => {
       if (selectedDate) {
-        setLoading(true);
-        await getDatasets({ dateSelected: selectedDate, dateCompared: comparedDate, compare });
-        setLoading(false);
+        try {
+          setLoading(true);
+          await getDatasets({ dateSelected: selectedDate, dateCompared: comparedDate, compare });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          showToast({
+            error: true,
+            message: error?.message,
+          });
+        }
       }
     })();
   }, []);
@@ -70,9 +80,17 @@ export default function useSalesGrowth({ mode }) {
   };
 
   const handleConfirm = async () => {
-    setLoading(true);
-    await getDatasets({ dateSelected: selectedDate, dateCompared: comparedDate, compare });
-    setLoading(false);
+    try {
+      setLoading(true);
+      await getDatasets({ dateSelected: selectedDate, dateCompared: comparedDate, compare });
+      setLoading(false);
+    } catch (error) {
+      showToast({
+        error: true,
+        message: error?.message,
+      });
+      setLoading(false);
+    }
   };
 
   const getDatasets = async ({ dateSelected, dateCompared }) => {

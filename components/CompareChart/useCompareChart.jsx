@@ -3,7 +3,8 @@ import { themeShop } from '@constants/themeShop.js';
 import { getDateRange, sendAlert } from '@helpers/utils';
 import getThemeData from '@services/getThemeData';
 import { format } from 'date-fns';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
+import { useNotificationStore } from 'providers/NotificationProvider';
 import { useEffect, useState } from 'react';
 
 export default function useCompareChart() {
@@ -12,7 +13,7 @@ export default function useCompareChart() {
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getDateRange('this_week'));
   const [selectedDatasets, setSelectedDatasets] = useState([]);
-
+  const { showToast } = useNotificationStore();
   const handleChangeDate = (newSelectedDate) => {
     if (newSelectedDate) setSelectedDate(newSelectedDate);
   };
@@ -22,12 +23,10 @@ export default function useCompareChart() {
   }, []);
 
   const handleChange = async () => {
-    // setLoading(true);
     for (let index = 0; index < themeShop.length; index++) {
       const theme = themeShop[index];
       getData(index, theme);
     }
-    // setLoading(false);
   };
 
   const getData = async (index, theme) => {
@@ -65,7 +64,10 @@ export default function useCompareChart() {
         }
       });
     } catch (error) {
-      console.log(error);
+      showToast({
+        error: true,
+        message: error?.message,
+      });
     }
   };
 

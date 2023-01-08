@@ -38,15 +38,9 @@ export const crawlData = async () => {
         review = $('.is-visually-hidden').text();
         reviewQuantity = $('.t-body.-size-l.h-m0').text();
       });
-
       const previousDate = await getPreviousData();
       const filterData = previousDate.filter((item) => item.name === name);
-      console.log(filterData?.[0]?.quantity);
       const currentDate = new Date();
-      // console.log({
-      //   $gte: zonedTimeToUtc(startOfDay(utcToZonedTime(currentDate, TIME_ZONE)), TIME_ZONE).toISOString(),
-      //   $lte: zonedTimeToUtc(endOfDay(utcToZonedTime(currentDate, TIME_ZONE)), TIME_ZONE).toISOString(),
-      // });
       await Customers.findOneAndUpdate(
         {
           createdAt: {
@@ -61,6 +55,7 @@ export const crawlData = async () => {
           sales: Number(presentSales.replace(/\D/g, '')) - fixedSales - (filterData?.[0]?.quantity ?? 0),
           review: Number(parseFloat(review.match(/[\d\.]+/))),
           reviewQuantity: Number(reviewQuantity.replace(/\D/g, '')) - fixedReviews,
+          reviewsPerDay: Number(reviewQuantity.replace(/\D/g, '')) - fixedReviews - (filterData?.[0]?.reviewQuantity ?? 0),
         },
         { upsert: true },
       );
