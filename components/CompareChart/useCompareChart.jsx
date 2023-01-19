@@ -23,10 +23,14 @@ export default function useCompareChart() {
   }, []);
 
   const handleChange = async () => {
+    setLoading(true);
+    let promises = [];
     for (let index = 0; index < themeShop.length; index++) {
       const theme = themeShop[index];
-      getData(index, theme);
+      promises.push(getData(index, theme));
     }
+    await Promise.allSettled(promises);
+    setLoading(false);
   };
 
   const getData = async (index, theme) => {

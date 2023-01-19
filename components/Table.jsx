@@ -31,7 +31,7 @@ function Table({ rows, loading }) {
         <DataTable
           columnContentTypes={['text', 'numeric', 'numeric', 'numeric']}
           headings={['Name', 'All-time sales', 'Rating', 'Sales']}
-          rows={rows?.length === themeShop?.length ? rows : skeletonRows}
+          rows={loading ? skeletonRows : rows}
         />
       </TableWrapper>
     </Card.Section>

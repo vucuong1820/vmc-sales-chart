@@ -7,6 +7,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Minimog Analytics</title>
+        <link rel="shortcut icon" href="/minimog.png" />
       </Head>
       <Component {...pageProps} />;
     </>

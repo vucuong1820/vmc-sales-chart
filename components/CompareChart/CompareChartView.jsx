@@ -1,6 +1,5 @@
 import { TooltipContainer } from '@components/charts.styles';
 import DateSelector from '@components/DateSelector';
-import Loading from '@components/layout/Loading';
 import LegendItem from '@components/LegendItem.jsx';
 import Table from '@components/Table';
 import TooltipItem from '@components/TooltipItem';
@@ -8,7 +7,6 @@ import { Button, Card, FormLayout, Heading, Stack } from '@shopify/polaris';
 import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import { cloneDeep } from 'lodash';
 import dynamic from 'next/dynamic';
-import styled from 'styled-components';
 import useCompareChart from './useCompareChart.jsx';
 const LineChart = dynamic(() => import('@shopify/polaris-viz').then((module) => module.LineChart), { ssr: false });
 

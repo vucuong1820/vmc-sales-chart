@@ -56,7 +56,7 @@ function DateSelector({
                 onSetSelected={setDateSelectedOption}
               />
             </FormLayout>
-            {compare && (
+            {(onlyCompare || compare) && (
               <div className="compare-date">
                 <ComparedDate onChangeDate={onChangeComparedDate} dates={comparedDate} />
               </div>

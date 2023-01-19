@@ -17,7 +17,6 @@ export default function useDateSelector({ onConfirm, selectedDate, onlyCompare, 
   const [dateSelectedOption, setDateSelectedOption] = useState('this_week');
   const [compare, setCompare] = useState(onlyCompare || !onlyDefault || false);
   const [dateOptions, setDateOptions] = useState(DATE_OPTIONS);
-  const comparedRef = useRef();
 
   useEffect(() => {
     if (!compare) onChangeComparedDate(null);
@@ -37,7 +36,6 @@ export default function useDateSelector({ onConfirm, selectedDate, onlyCompare, 
 
   const handleCloseDateSelector = () => {
     setActive(false);
-    setCompare(comparedRef.current);
   };
 
   const handleApply = () => {

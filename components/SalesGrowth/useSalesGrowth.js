@@ -145,7 +145,6 @@ export default function useSalesGrowth({ mode }) {
     }
 
     setTotalSelectedQty(selectedQty);
-
     const rate = ((selectedQty - comparedQty) / (comparedQty || 1)) * 100;
     setGrowthRate(rate);
 
