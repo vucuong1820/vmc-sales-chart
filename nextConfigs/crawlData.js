@@ -1,13 +1,15 @@
 /* eslint-disable no-console */
 /* eslint-disable no-useless-escape */
-import { TIME_ZONE } from '@constants';
-import { themeShop } from '@constants/themeShop';
-import Customers from '@models/Customers';
-import axios from 'axios';
-import cheerio from 'cheerio';
-import dbConnect from 'configs/dbConnect';
-import { endOfDay, startOfDay } from 'date-fns';
-import { utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+
+const Customers = require('../models/Customers');
+const CronJobs = require('../models/CronJobs');
+const { default: axios } = require('axios');
+const cheerio = require('cheerio');
+const dbConnect = require('../configs/dbConnect');
+const { startOfDay, endOfDay, addDays } = require('date-fns');
+const { zonedTimeToUtc, utcToZonedTime } = require('date-fns-tz');
+const themeShop = require('./themeShop.js');
+const TIME_ZONE = 'Australia/Sydney';
 
 dbConnect();
 
@@ -25,7 +27,19 @@ const getPreviousData = async (dayStart, name) => {
   return data;
 };
 
-export const crawlData = async () => {
+const saveCronJob = async () => {
+  const currentDate = new Date();
+  await CronJobs.findOneAndUpdate(
+    {},
+    {
+      lastRunAt: currentDate.toISOString(),
+      nextRunAt: addDays(currentDate, 1).toISOString(),
+    },
+    { upsert: true },
+  );
+};
+
+const crawlData = async () => {
   try {
     themeShop.forEach(async (theme) => {
       let presentSales;
@@ -61,7 +75,10 @@ export const crawlData = async () => {
         { upsert: true },
       );
     });
+    await saveCronJob();
   } catch (error) {
     console.log(error);
   }
 };
+
+module.exports = crawlData;

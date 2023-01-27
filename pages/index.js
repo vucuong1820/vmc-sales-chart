@@ -2,7 +2,6 @@ import CompareChart from '@components/CompareChart';
 import Loading from '@components/layout/Loading';
 import SaleGrowthChart from '@components/SalesGrowth';
 import { CHART_GROWTH_MAPPING } from '@constants/chart';
-import autoCrawl from '@services/autoCrawl';
 import { AppProvider, DisplayText, Frame, Layout, Page, Stack } from '@shopify/polaris';
 import '@shopify/polaris-viz/build/esm/styles.css';
 import en from '@shopify/polaris/locales/en.json';
@@ -16,9 +15,7 @@ function Home() {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
-      // await migrateTimestampService();
       try {
-        autoCrawl();
         setLoading(true);
         await crawlThemeShops();
         setLoading(false);
