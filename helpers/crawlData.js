@@ -60,6 +60,7 @@ export const crawlData = async () => {
         },
         { upsert: true },
       );
+      console.log('[CRAWL]:', name);
     });
   } catch (error) {
     console.log(error);
