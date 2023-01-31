@@ -27,7 +27,8 @@ const getPreviousData = async (dayStart, name) => {
 
 export const crawlData = async () => {
   try {
-    themeShop.forEach(async (theme) => {
+    console.log('[START CRAWL]');
+    for (const theme of themeShop) {
       let presentSales;
       let review;
       let reviewQuantity;
@@ -60,8 +61,9 @@ export const crawlData = async () => {
         },
         { upsert: true },
       );
-      console.log('[CRAWL]:', name);
-    });
+      console.log('[CRAWL:]', name);
+    }
+    console.log('[FINISH CRAWL]');
   } catch (error) {
     console.log(error);
   }
